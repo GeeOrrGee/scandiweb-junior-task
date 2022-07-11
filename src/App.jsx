@@ -55,7 +55,7 @@ class App extends Component {
                                 <Navigation />
                                 <Routes>
                                     {categories.map((category) => {
-                                        console.log(category);
+                                        // console.log(category);
                                         return (
                                             <Route
                                                 key={category.name}

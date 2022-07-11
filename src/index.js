@@ -5,6 +5,7 @@ import App from './App';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 // import { CategoriesProvider } from './contexts/categories.context';
 import { BrowserRouter } from 'react-router-dom';
+import CurrencyProvider from './contexts/currencies.context';
 // import { gql } from '@apollo/client';
 
 const client = new ApolloClient({
@@ -27,7 +28,9 @@ root.render(
         <ApolloProvider client={client}>
             <BrowserRouter>
                 {/* <CategoriesProvider> */}
-                <App />
+                <CurrencyProvider>
+                    <App />
+                </CurrencyProvider>
                 {/* </CategoriesProvider> */}
             </BrowserRouter>
         </ApolloProvider>

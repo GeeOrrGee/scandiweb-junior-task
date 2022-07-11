@@ -80,3 +80,10 @@ export const ProductContainer = styled.li`
         border-radius: 10px;
     }
 `;
+
+////TODOS////
+
+//1- do currency switcher global context
+//2- custom dropdown for currencySwitcher
+//3-nested routing when clicking on the product(f.e. product-ps5,
+//path=/tech/ps5, even if clicked on all categories page)

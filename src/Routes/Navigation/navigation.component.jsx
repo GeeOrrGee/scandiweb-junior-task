@@ -10,7 +10,8 @@ import {
 } from './navigation.styles.jsx';
 import { Query } from '@apollo/client/react/components';
 import { gql } from '@apollo/client';
-
+import { CurrencyContext } from '../../contexts/currencies.context';
+console.log(CurrencyContext);
 const CATEGORY_NAME = gql`
     query {
         categories {
@@ -20,38 +21,38 @@ const CATEGORY_NAME = gql`
 `;
 
 class Navigation extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        this.state = {};
     }
 
     render() {
+        const { setActiveCurrency, activeCurrency, currencies } = this.context;
+
         return (
             <NavigationContainer>
                 <NavListContainer>
                     <Query query={CATEGORY_NAME}>
                         {({ data, loading }) => {
-                            console.log(data);
                             if (loading) {
                                 console.log('loading bro');
                             } else {
                                 const { categories } = data;
                                 return categories.map((categoryObj) => (
-                                    <>
-                                        <li key={categoryObj.name}>
-                                            <NavLink
-                                                className={({ isActive }) =>
-                                                    isActive ? 'nav-active' : ''
-                                                }
-                                                to={`/${
-                                                    categoryObj.name === 'all'
-                                                        ? ''
-                                                        : categoryObj.name
-                                                }`}
-                                            >
-                                                {categoryObj.name}
-                                            </NavLink>
-                                        </li>
-                                    </>
+                                    <li key={categoryObj.name}>
+                                        <NavLink
+                                            className={({ isActive }) =>
+                                                isActive ? 'nav-active' : ''
+                                            }
+                                            to={`/${
+                                                categoryObj.name === 'all'
+                                                    ? ''
+                                                    : categoryObj.name
+                                            }`}
+                                        >
+                                            {categoryObj.name}
+                                        </NavLink>
+                                    </li>
                                 ));
                             }
                         }}
@@ -62,7 +63,17 @@ class Navigation extends Component {
                 </NavLogoContainer>
 
                 <NavCartContainer>
-                    <p>currency</p>
+                    <select
+                        defaultValue={activeCurrency}
+                        onChange={(e) => setActiveCurrency(e.target.value)}
+                    >
+                        {currencies.map(({ symbol, label }) => (
+                            <option
+                                key={symbol}
+                                value={label}
+                            >{`${symbol} ${label}`}</option>
+                        ))}
+                    </select>
                     {/* state for currency */}
                     <CartIcon></CartIcon>
                 </NavCartContainer>
@@ -71,4 +82,5 @@ class Navigation extends Component {
     }
 }
 
+Navigation.contextType = CurrencyContext;
 export default Navigation;

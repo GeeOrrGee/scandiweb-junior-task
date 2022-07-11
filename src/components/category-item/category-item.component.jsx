@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { CurrencyContext } from '../../contexts/currencies.context';
 import './category-item.styles';
 import {
     ProductContainer,
@@ -17,7 +18,11 @@ class CategoryItem extends Component {
 
     render() {
         const { prices, inStock, gallery, name } = this.props.product;
-        console.log(this.props);
+        const { activeCurrency } = this.context;
+        const { amount, currency } = prices.find(
+            ({ amount, currency }) => currency.label === activeCurrency
+        ); // finding price by currency context
+
         const mouseEnterHandler = () => {
             this.setState({ ...this.state, hoverIcon: true });
         };
@@ -36,11 +41,11 @@ class CategoryItem extends Component {
                 </ProductImgContainer>
                 <ProductInfoContainer>
                     <p>{name}</p>
-                    <span>{prices[0].amount}</span>
+                    <span>{`${currency.symbol} ${amount}`}</span>
                 </ProductInfoContainer>
             </ProductContainer>
         );
     }
 }
-
+CategoryItem.contextType = CurrencyContext;
 export default CategoryItem;
