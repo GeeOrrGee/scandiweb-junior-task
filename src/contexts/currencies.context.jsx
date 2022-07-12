@@ -31,21 +31,12 @@ class CurrencyProvider extends Component {
             });
         };
         this.state = {
+            loading: true,
             currencies: [],
-            activeCurrency: 'USD',
-            setActiveCurrency: this.setActiveCurrency,
+            activeCurrency: 'USD', // to set default value
+            setActiveCurrency: this.setActiveCurrency, //currencyToggler
         };
     }
-
-    // shouldComponentUpdate(nextProps) {
-    //     if (!this.props.data) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
-
-    // getSnapshotBeforeUpdate(prevProps) {}
 
     componentDidUpdate(prevProps) {
         const {
@@ -56,7 +47,7 @@ class CurrencyProvider extends Component {
         } else if (this.props.data !== prevProps.data) {
             const { currencies } = this.props.data;
             this.setState(() => {
-                return { ...this.state, currencies };
+                return { ...this.state, currencies, loading };
             });
         } // handling async data fetch from apollo HOC query handler
     }

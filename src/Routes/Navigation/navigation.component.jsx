@@ -1,8 +1,11 @@
 import { Component } from 'react';
 import { ReactComponent as Logo } from '../../assets/navigation-logo/a-logo.svg';
 import { NavLink } from 'react-router-dom';
+import { ReactComponent as VectorDown } from '../../assets/vectors/Vector-Down.svg';
+import { ReactComponent as VectorUp } from '../../assets/vectors/Vector-Up.svg';
 import { ReactComponent as CartIcon } from '../../assets/navigation-logo/Vector.svg';
 import {
+    DropdownContainer,
     NavCartContainer,
     NavigationContainer,
     NavListContainer,
@@ -23,11 +26,19 @@ const CATEGORY_NAME = gql`
 class Navigation extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            dropdownActive: false,
+        };
     }
 
     render() {
-        const { setActiveCurrency, activeCurrency, currencies } = this.context;
+        const { setActiveCurrency, loading, activeCurrency, currencies } =
+            this.context;
+        if (loading) return;
+        const { symbol } = currencies.find((currencyObj) => {
+            return currencyObj.label === activeCurrency;
+        }); // to output a activeCurrency symbol
+        // console.log(dd);
 
         return (
             <NavigationContainer>
@@ -63,19 +74,40 @@ class Navigation extends Component {
                 </NavLogoContainer>
 
                 <NavCartContainer>
-                    <select
-                        defaultValue={activeCurrency}
-                        onChange={(e) => setActiveCurrency(e.target.value)}
+                    <div
+                        onClick={() => {
+                            this.setState({
+                                dropdownActive: !this.state.dropdownActive,
+                            });
+                        }}
                     >
-                        {currencies.map(({ symbol, label }) => (
-                            <option
-                                key={symbol}
-                                value={label}
-                            >{`${symbol} ${label}`}</option>
-                        ))}
-                    </select>
-                    {/* state for currency */}
+                        <span>{symbol}</span>
+                        {!this.state.dropdownActive ? (
+                            <VectorDown />
+                        ) : (
+                            <VectorUp />
+                        )}
+                    </div>
+
                     <CartIcon></CartIcon>
+                    {this.state.dropdownActive && (
+                        <DropdownContainer>
+                            {currencies.map((currencyObj) => (
+                                <span
+                                    key={currencyObj.symbol}
+                                    onClick={() => {
+                                        setActiveCurrency(currencyObj.label);
+                                        this.setState({
+                                            dropdownActive:
+                                                !this.state.dropdownActive,
+                                        });
+                                    }}
+                                >{`${currencyObj.symbol} ${currencyObj.label}`}</span>
+                            ))}
+                        </DropdownContainer>
+                    )}
+
+                    {/* state for currency */}
                 </NavCartContainer>
             </NavigationContainer>
         );

@@ -1,13 +1,79 @@
 import styled from 'styled-components';
 
+export const DropdownContainer = styled.div`
+    position: absolute;
+    top: 170%;
+    left: 40%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    /* gap: 3rem; */
+    align-items: center;
+    /* padding: 2rem 1.5rem; */
+    letter-spacing: 0.1rem;
+    background-color: white;
+    box-shadow: 0 0 1rem rgb(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    border-radius: 10px;
+    animation: 0.3s ease alternate dropdown;
+    span:first-child {
+        /* padding-top: 1rem; */
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+    }
+    span:last-child {
+        /* padding-bottom: 1rem; */
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+    span {
+        text-align: center;
+        /* margin-bottom: 0.6rem; */
+        padding-inline: 1.5rem;
+        padding-block: 1rem;
+        width: 100%;
+        &:hover {
+            background-color: rgb(0, 0, 0, 0.1);
+        }
+    }
+
+    @keyframes dropdown {
+        0% {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0%);
+        }
+    }
+
+    @keyframes dropUp {
+        100% {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+    }
+`;
+
 export const NavCartContainer = styled.div`
+    font-size: 1.4em;
     display: flex;
     gap: 3rem;
-    align-items: center;
+    align-items: flex-start;
     /* margin-left: auto; */
     margin-top: 1rem;
     width: 15rem;
     justify-content: flex-end;
+
+    position: relative;
+    div {
+        cursor: pointer;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
 `;
 
 export const NavLogoContainer = styled.div`
