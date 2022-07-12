@@ -6,6 +6,13 @@ export const ProductsListContainer = styled.ul`
     width: 100%;
     gap: 6rem;
     /* grid-template-rows: 30rem; */
+
+    @media (max-width: 47.5em) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 27.5em) {
+        grid-template-columns: 1fr;
+    }
 `;
 
 export const CategorySectionContainer = styled.section`

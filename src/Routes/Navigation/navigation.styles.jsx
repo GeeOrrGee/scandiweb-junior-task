@@ -88,6 +88,32 @@ export const NavListContainer = styled.ul`
     gap: 3rem;
 
     font-size: 1.4rem;
+    /* ${(props) =>
+        props.mobileNavActive &&
+        `
+        opacity: 1;
+        left:-10%;
+        top:0%;
+        padding:5rem;
+        li:first-child{
+            margin-top: 5rem;
+          
+
+        }
+        li{
+            margin-left:6rem;
+            height:4rem !important;
+        }
+
+
+        position: absolute;
+        background-color:black;
+        transform: translateX(0%);
+        height: 100vh !important;
+        width: 50vw;
+        flex-direction: column;
+        gap:5rem;
+    `} */
 
     height: 100%;
     li {

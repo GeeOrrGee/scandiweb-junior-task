@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { ReactComponent as Logo } from '../../assets/navigation-logo/a-logo.svg';
+import { ReactComponent as HamburgerNav } from '../../assets/menu-hamburger-custom.svg';
 import { NavLink } from 'react-router-dom';
 import { ReactComponent as VectorDown } from '../../assets/vectors/Vector-Down.svg';
 import { ReactComponent as VectorUp } from '../../assets/vectors/Vector-Up.svg';
@@ -27,8 +28,29 @@ class Navigation extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            mobileNav: false,
             dropdownActive: false,
         };
+
+        this.addingListeners = this.addingListeners.bind(this);
+    }
+
+    componentDidMount() {
+        window.addEventListener('resize', this.addingListeners);
+    }
+
+    toggleMobileNav() {
+        this.setState({ ...this.state, mobileNav: !this.state.mobileNav });
+    }
+    addingListeners() {
+        const getWindowWidth = window.innerWidth;
+        if (getWindowWidth < 761) this.toggleMobileNav();
+    }
+
+    setActiveCurrency(label) {}
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.addingListeners);
     }
 
     render() {
@@ -37,16 +59,17 @@ class Navigation extends Component {
         if (loading) return;
         const { symbol } = currencies.find((currencyObj) => {
             return currencyObj.label === activeCurrency;
-        }); // to output a activeCurrency symbol
-        // console.log(dd);
+        }); // to output a activeCurrency symbol in currency changer
 
         return (
             <NavigationContainer>
-                <NavListContainer>
+                {/* HANDLING MOBILE NAVIGATION CONDITIONALLY ON RESIZE */}
+                {this.state.mobileNav && <HamburgerNav />}
+                <NavListContainer mobileNavActive={this.state.mobileNav}>
                     <Query query={CATEGORY_NAME}>
                         {({ data, loading }) => {
                             if (loading) {
-                                console.log('loading bro');
+                                return <h2> LOADING SHECHEMA</h2>;
                             } else {
                                 const { categories } = data;
                                 return categories.map((categoryObj) => (

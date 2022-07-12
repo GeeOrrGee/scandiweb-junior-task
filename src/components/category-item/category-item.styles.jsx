@@ -16,11 +16,11 @@ export const ProductInfoContainer = styled.div`
     flex-direction: column;
     p {
         font-weight: 300;
-        font-size: 1.4rem;
+        font-size: clamp(1rem, 1.2vw, 2rem);
     }
 
     span {
-        font-size: 1.4rem;
+        font-size: clamp(1rem, 1.2vw, 2rem);
     }
 `;
 
