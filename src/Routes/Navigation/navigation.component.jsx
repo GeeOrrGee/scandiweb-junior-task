@@ -1,15 +1,18 @@
 import { Component } from 'react';
 import { ReactComponent as Logo } from '../../assets/navigation-logo/a-logo.svg';
-import { ReactComponent as HamburgerNav } from '../../assets/menu-hamburger-custom.svg';
+import { ReactComponent as HamburgerNav } from '../../assets/mobileNavIcons/menu-hamburger-custom.svg';
+import { ReactComponent as CloseBtn } from '../../assets/mobileNavIcons/211652_close_icon.svg';
 import { NavLink } from 'react-router-dom';
 import { ReactComponent as VectorDown } from '../../assets/vectors/Vector-Down.svg';
 import { ReactComponent as VectorUp } from '../../assets/vectors/Vector-Up.svg';
 import { ReactComponent as CartIcon } from '../../assets/navigation-logo/Vector.svg';
 import {
     DropdownContainer,
+    MobileNavIconContainer,
     NavCartContainer,
     NavigationContainer,
     NavListContainer,
+    Backdrop,
     NavLogoContainer,
 } from './navigation.styles.jsx';
 import { Query } from '@apollo/client/react/components';
@@ -30,27 +33,40 @@ class Navigation extends Component {
         this.state = {
             mobileNav: false,
             dropdownActive: false,
+            mobileNavActive: false,
         };
 
-        this.addingListeners = this.addingListeners.bind(this);
+        this.toggleMobileNav = this.toggleMobileNav.bind(this);
+        this.displayMobileNav = this.displayMobileNav.bind(this);
     }
 
     componentDidMount() {
-        window.addEventListener('resize', this.addingListeners);
+        window.addEventListener('resize', this.displayMobileNav); //handling the display process of the navbar on screen resize: ;
+        this.displayMobileNav(); //displaying navbar based on users viewport width on mount
     }
 
-    toggleMobileNav() {
-        this.setState({ ...this.state, mobileNav: !this.state.mobileNav });
-    }
-    addingListeners() {
+    displayMobileNav() {
         const getWindowWidth = window.innerWidth;
-        if (getWindowWidth < 761) this.toggleMobileNav();
-    }
 
-    setActiveCurrency(label) {}
+        if (getWindowWidth < 761) {
+            this.setState({ ...this.state, mobileNav: true });
+        } else {
+            this.setState({ ...this.state, mobileNav: false });
+        }
+    } // conditional mobileNavBar rendering logic
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.addingListeners);
+    } //cleaning up listeners
+
+    toggleMobileNav() {
+        console.log(this);
+        this.setState(() => {
+            return {
+                ...this.state,
+                mobileNavActive: !this.state.mobileNavActive,
+            };
+        });
     }
 
     render() {
@@ -63,9 +79,23 @@ class Navigation extends Component {
 
         return (
             <NavigationContainer>
+                {this.state.mobileNavActive && (
+                    <Backdrop onClick={this.toggleMobileNav} />
+                )}
                 {/* HANDLING MOBILE NAVIGATION CONDITIONALLY ON RESIZE */}
-                {this.state.mobileNav && <HamburgerNav />}
-                <NavListContainer mobileNavActive={this.state.mobileNav}>
+                {this.state.mobileNav && (
+                    <MobileNavIconContainer onClick={this.toggleMobileNav}>
+                        {this.state.mobileNavActive ? (
+                            <CloseBtn />
+                        ) : (
+                            <HamburgerNav /> // changing icons on open/close of mobile navbar with state
+                        )}
+                    </MobileNavIconContainer>
+                )}
+                <NavListContainer
+                    mobileNavActive={this.state.mobileNavActive}
+                    mobileNav={this.state.mobileNav}
+                >
                     <Query query={CATEGORY_NAME}>
                         {({ data, loading }) => {
                             if (loading) {
@@ -92,6 +122,7 @@ class Navigation extends Component {
                         }}
                     </Query>
                 </NavListContainer>
+
                 <NavLogoContainer>
                     <Logo />
                 </NavLogoContainer>

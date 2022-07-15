@@ -1,5 +1,20 @@
 import styled from 'styled-components';
 
+export const MobileNavIconContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 10;
+    width: 2.5rem;
+    height: 2.5rem;
+    svg {
+        width: 100%;
+        height: 100%;
+        fill: rgb(94, 206, 123);
+    }
+`;
+
 export const DropdownContainer = styled.div`
     position: absolute;
     top: 170%;
@@ -17,18 +32,16 @@ export const DropdownContainer = styled.div`
     border-radius: 10px;
     animation: 0.3s ease alternate dropdown;
     span:first-child {
-        /* padding-top: 1rem; */
         border-top-right-radius: 10px;
         border-top-left-radius: 10px;
     }
     span:last-child {
-        /* padding-bottom: 1rem; */
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
     }
     span {
         text-align: center;
-        /* margin-bottom: 0.6rem; */
+
         padding-inline: 1.5rem;
         padding-block: 1rem;
         width: 100%;
@@ -49,11 +62,8 @@ export const DropdownContainer = styled.div`
         }
     }
 
-    @keyframes dropUp {
-        100% {
-            transform: translateY(-100%);
-            opacity: 0;
-        }
+    @media (max-width: 47.5em) {
+        left: -20%;
     }
 `;
 
@@ -62,7 +72,7 @@ export const NavCartContainer = styled.div`
     display: flex;
     gap: 3rem;
     align-items: flex-start;
-    /* margin-left: auto; */
+
     margin-top: 1rem;
     width: 15rem;
     justify-content: flex-end;
@@ -73,6 +83,9 @@ export const NavCartContainer = styled.div`
         display: flex;
         gap: 1rem;
         align-items: center;
+    }
+    @media (max-width: 47.5em) {
+        width: unset;
     }
 `;
 
@@ -88,32 +101,6 @@ export const NavListContainer = styled.ul`
     gap: 3rem;
 
     font-size: 1.4rem;
-    /* ${(props) =>
-        props.mobileNavActive &&
-        `
-        opacity: 1;
-        left:-10%;
-        top:0%;
-        padding:5rem;
-        li:first-child{
-            margin-top: 5rem;
-          
-
-        }
-        li{
-            margin-left:6rem;
-            height:4rem !important;
-        }
-
-
-        position: absolute;
-        background-color:black;
-        transform: translateX(0%);
-        height: 100vh !important;
-        width: 50vw;
-        flex-direction: column;
-        gap:5rem;
-    `} */
 
     height: 100%;
     li {
@@ -144,6 +131,66 @@ export const NavListContainer = styled.ul`
             }
         }
     }
+
+    ${(props) =>
+        props.mobileNav &&
+        `
+        position:fixed;
+        top:0;
+        left:0;
+        flex-direction: column;
+        width:100vw;
+        height:100vh;
+        max-width: 25rem;
+        align-items:center;
+        padding: 10rem;
+        background-color: #fff;
+        z-index:8;
+        transform: translateX(-100%);
+        
+        li{
+            height: unset;
+            width:100%;
+            justify-content: center;  
+            
+        }
+        
+        
+        `}
+    ${(props) =>
+        props.mobileNavActive &&
+        `
+        
+        transition: all 0.3s;
+        animation: .3s ease forwards slideIn;
+        li{
+            opacity:0;
+            animation: .3s ease forwards slideIn;
+            animation-delay: 0.3s;
+        }
+    `} //active mobile nav stylings
+
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0%);
+            opacity: 1;
+        }
+    }
+`;
+
+export const Backdrop = styled.div`
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0, 0.2);
+    z-index: 5;
 `;
 
 export const NavigationContainer = styled.nav`
@@ -151,7 +198,7 @@ export const NavigationContainer = styled.nav`
     width: 85vw;
     position: sticky;
     top: 0;
-    /* padding-block: 2rem; */
+
     padding-top: 1rem;
     padding-inline: 2rem;
     background-color: #fff;
@@ -162,6 +209,10 @@ export const NavigationContainer = styled.nav`
     justify-content: space-between;
     align-items: flex-start;
     margin: 2rem auto;
-    z-index: 9999;
+    z-index: 2;
     height: 6rem;
+
+    @media (max-width: 47.5em) {
+        align-items: center;
+    }
 `;

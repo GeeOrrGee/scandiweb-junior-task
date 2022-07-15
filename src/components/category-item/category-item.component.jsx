@@ -14,8 +14,21 @@ class CategoryItem extends Component {
         this.state = {
             hoverIcon: false,
         };
+        this.toggleHoverIcon = this.toggleHoverIcon.bind(this);
     }
 
+    componentDidMount() {
+        window.addEventListener('resize', this.toggleHoverIcon);
+        this.toggleHoverIcon();
+    }
+    toggleHoverIcon() {
+        const getWindowWidth = window.innerWidth;
+        if (getWindowWidth < 761) {
+            this.setState({ hoverIcon: true });
+        } else {
+            this.setState({ hoverIcon: false });
+        }
+    }
     render() {
         const { prices, inStock, gallery, name } = this.props.product;
         const { activeCurrency } = this.context;
@@ -49,3 +62,6 @@ class CategoryItem extends Component {
 }
 CategoryItem.contextType = CurrencyContext;
 export default CategoryItem;
+
+// details page (params)
+// cart functionality
