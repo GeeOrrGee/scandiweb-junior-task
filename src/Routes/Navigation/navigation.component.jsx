@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { ReactComponent as Logo } from '../../assets/navigation-logo/a-logo.svg';
 import { ReactComponent as HamburgerNav } from '../../assets/mobileNavIcons/menu-hamburger-custom.svg';
 import { ReactComponent as CloseBtn } from '../../assets/mobileNavIcons/211652_close_icon.svg';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link, withRouter } from 'react-router-dom';
 import { ReactComponent as VectorDown } from '../../assets/vectors/Vector-Down.svg';
 import { ReactComponent as VectorUp } from '../../assets/vectors/Vector-Up.svg';
 import { ReactComponent as CartIcon } from '../../assets/navigation-logo/Vector.svg';
@@ -18,7 +18,7 @@ import {
 import { Query } from '@apollo/client/react/components';
 import { gql } from '@apollo/client';
 import { CurrencyContext } from '../../contexts/currencies.context';
-console.log(CurrencyContext);
+
 const CATEGORY_NAME = gql`
     query {
         categories {
@@ -36,13 +36,20 @@ class Navigation extends Component {
             mobileNavActive: false,
         };
 
-        this.toggleMobileNav = this.toggleMobileNav.bind(this);
-        this.displayMobileNav = this.displayMobileNav.bind(this);
+        this.toggleMobileNav = this.toggleMobileNav.bind(this); // handles toggling the mobile navigation UI (slide-in)
+        this.displayMobileNav = this.displayMobileNav.bind(this); // handles mobile navigation responsiveness based on viewport width
+        this.handleDropdownClose = this.handleDropdownClose.bind(this); //handles dropdown closing when clicking outside of the switcher
     }
 
     componentDidMount() {
         window.addEventListener('resize', this.displayMobileNav); //handling the display process of the navbar on screen resize: ;
         this.displayMobileNav(); //displaying navbar based on users viewport width on mount
+        document.body.addEventListener('click', this.handleDropdownClose);
+    }
+
+    handleDropdownClose(e) {
+        if (e.path[0].tagName !== 'DIV')
+            this.setState({ ...this.state, dropdownActive: false });
     }
 
     displayMobileNav() {
@@ -105,14 +112,12 @@ class Navigation extends Component {
                                 return categories.map((categoryObj) => (
                                     <li key={categoryObj.name}>
                                         <NavLink
-                                            className={({ isActive }) =>
-                                                isActive ? 'nav-active' : ''
-                                            }
-                                            to={`/${
-                                                categoryObj.name === 'all'
-                                                    ? ''
-                                                    : categoryObj.name
-                                            }`}
+                                            activeClassName='nav-active'
+                                            // className={(isActive) =>
+                                            //     '' +
+                                            //     (isActive ? 'nav-active' : '')
+                                            // }
+                                            to={`/${categoryObj.name}`}
                                         >
                                             {categoryObj.name}
                                         </NavLink>
@@ -169,4 +174,4 @@ class Navigation extends Component {
 }
 
 Navigation.contextType = CurrencyContext;
-export default Navigation;
+export default withRouter(Navigation);

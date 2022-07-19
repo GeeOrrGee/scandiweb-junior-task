@@ -5,37 +5,27 @@ import { Query } from '@apollo/client/react/components';
 import { gql } from '@apollo/client';
 import { graphql } from '@apollo/client/react/hoc';
 
-//currency fetching from graphql
-
-const CURRENCY_QUERY = gql`
-    query {
-        currencies {
-            label
-            symbol
-        }
-    }
-`;
-
 export const CurrencyContext = createContext({});
 
 class CurrencyProvider extends Component {
     constructor(props) {
         super(props);
 
-        this.setActiveCurrency = (selectedCurrency) => {
-            this.setState(() => {
-                return {
-                    ...this.state,
-                    activeCurrency: selectedCurrency,
-                };
-            });
-        };
         this.state = {
             loading: true,
             currencies: [],
             activeCurrency: 'USD', // to set default value
-            setActiveCurrency: this.setActiveCurrency, //currencyToggler
+            setActiveCurrency: this.setActiveCurrency.bind(this), //currencyToggler
         };
+    }
+
+    setActiveCurrency(selectedCurrency) {
+        this.setState(() => {
+            return {
+                ...this.state,
+                activeCurrency: selectedCurrency,
+            };
+        });
     }
 
     componentDidUpdate(prevProps) {

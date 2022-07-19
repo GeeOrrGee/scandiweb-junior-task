@@ -1,13 +1,14 @@
 import { Component } from 'react';
 import './category-page.styles';
-import CategoryItem from '../../components/category-item/category-item.component';
+import CategoryItem from '../../../components/category-item/category-item.component';
 import {
     CategorySectionContainer,
     ProductsListContainer,
 } from './category-page.styles';
-class CategoryPage extends Component {
+class ProductsList extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props);
     }
 
     render() {
@@ -28,4 +29,4 @@ class CategoryPage extends Component {
     }
 }
 
-export default CategoryPage;
+export default ProductsList;

@@ -26,13 +26,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <ApolloProvider client={client}>
+            {/* <CategoriesProvider> */}
             <BrowserRouter>
-                {/* <CategoriesProvider> */}
                 <CurrencyProvider>
                     <App />
                 </CurrencyProvider>
-                {/* </CategoriesProvider> */}
             </BrowserRouter>
+            {/* </CategoriesProvider> */}
         </ApolloProvider>
     </React.StrictMode>
 );
