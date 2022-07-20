@@ -3,7 +3,7 @@ import './App.css';
 // import { CategoriesContext } from './contexts/categories.context';
 import { gql } from '@apollo/client';
 import { Query } from '@apollo/client/react/components';
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import ProductDetails from './Routes/ProductDetails/pdp.component';
 import Navigation from './Routes/Navigation/navigation.component';
 import CategoryPage from './Routes/CategoryPage/CategoryPage.routes';
@@ -39,9 +39,6 @@ class App extends Component {
     }
 
     render() {
-        {
-            /* there is no homepage, so I'm redirecting to category, I handled the root '/' path matching with v6('all' category was rendered at '/'), but when I migrated project to v5, it kinda got messy :) */
-        }
         return (
             <Query query={ALL_DATA}>
                 {({ data, loading }) => {
@@ -54,25 +51,30 @@ class App extends Component {
                         return (
                             <main>
                                 <Navigation />
-                                <Switch>
+                                <Routes>
                                     {categories.map((category) => {
                                         // console.log(category);
 
                                         return (
                                             <Route
                                                 key={category.name}
-                                                path={`/${category.name}`}
-                                            >
-                                                <CategoryPage
-                                                    name={category.name}
-                                                    products={category.products}
-                                                />
-                                            </Route>
+                                                path={`${
+                                                    category.name === 'all'
+                                                        ? '/'
+                                                        : category.name
+                                                }/*`}
+                                                element={
+                                                    <CategoryPage
+                                                        name={category.name}
+                                                        products={
+                                                            category.products
+                                                        }
+                                                    />
+                                                }
+                                            />
                                         );
                                     })}
-
-                                    <Redirect to={'/all'} />
-                                </Switch>
+                                </Routes>
                             </main>
                         );
                     }
@@ -83,4 +85,4 @@ class App extends Component {
 }
 
 // App.contextType = CategoriesContext;
-export default withRouter(App);
+export default App;

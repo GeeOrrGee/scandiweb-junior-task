@@ -41,7 +41,7 @@ export const DropdownContainer = styled.div`
     }
     span {
         text-align: center;
-
+        cursor: pointer;
         padding-inline: 1.5rem;
         padding-block: 1rem;
         width: 100%;
@@ -78,11 +78,25 @@ export const NavCartContainer = styled.div`
     justify-content: flex-end;
 
     position: relative;
-    div {
+    div:first-child {
         cursor: pointer;
         display: flex;
         gap: 1rem;
         align-items: center;
+        svg {
+            pointer-events: none;
+        }
+        span {
+            pointer-events: none;
+        }
+        /* span {
+            width: 100%;
+            height: 100%;
+        }
+        svg {
+            width: 100%;
+            height: 100%;
+        } */
     }
     @media (max-width: 47.5em) {
         width: unset;

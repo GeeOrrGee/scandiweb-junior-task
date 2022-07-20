@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { CurrencyContext } from '../../contexts/currencies.context';
 import './category-item.styles';
-import { Redirect, withRouter } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import {
     ProductContainer,
     ProductImgContainer,
@@ -74,7 +74,7 @@ class CategoryItem extends Component {
         return (
             <>
                 {this.state.redirectToProductPage && (
-                    <Redirect from={`${match.url}`} to={`/${category}/${id}`} />
+                    <Navigate to={`/${category}/${id}`} />
                 )}
 
                 <ProductContainer
@@ -97,7 +97,7 @@ class CategoryItem extends Component {
     }
 }
 CategoryItem.contextType = CurrencyContext;
-export default withRouter(CategoryItem);
+export default CategoryItem;
 
 // details page (params)
 // cart functionality
