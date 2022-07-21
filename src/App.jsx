@@ -18,6 +18,18 @@ const ALL_DATA = gql`
                 inStock
                 gallery
                 category
+                description
+                brand
+                attributes {
+                    id
+                    name
+                    type
+                    items {
+                        displayValue
+                        value
+                        id
+                    }
+                }
                 prices {
                     amount
                     currency {

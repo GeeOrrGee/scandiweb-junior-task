@@ -48,7 +48,6 @@ class Navigation extends Component {
     }
 
     handleDropdownClose(e) {
-        console.log(e.path);
         if (this.dropdownRef.current !== e.path[0])
             this.setState({ ...this.state, dropdownActive: false }); // to handle dropdown close outside the dropdownContainer
     }
