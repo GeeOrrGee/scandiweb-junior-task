@@ -16,7 +16,7 @@ export class CartProvider extends Component {
 
     addCartItem(item) {
         console.log(item);
-        if (!item.inStock) return;
+        if (!item.inStock) return; // to prevent out of stock items getting added to the cart
 
         const existingItem = this.state.cart.find(
             (cartItem) => item.id === cartItem.id
@@ -24,16 +24,32 @@ export class CartProvider extends Component {
 
         if (existingItem) {
             // **************************
-            // configure logic how to stack the same attributes in the cart and how to give default attribute values when clicking from PLP
+            // configure logic how to stack the same attributes in the cart and how to give default attribute values when clicking from PLP - done, build PDP page
+            const { attributes } = existingItem;
+
+            const passedAttributeIds = attributes.map(
+                (atrObj) => atrObj.items.id
+            ); // attribute IDs to check if object with the same attribute already exists or not
+            console.log(passedAttributeIds);
             // *********************************** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            const newCartArray = this.state.cart.map((cartItem) =>
-                cartItem.id === existingItem.id
-                    ? {
-                          ...existingItem,
-                          quantity: existingItem.quantity + 1,
-                      }
-                    : cartItem
-            );
+            const newCartArray = this.state.cart.map((cartItem, index) => {
+                // checking subsequent attributes and comparing them to extracted 'passedAttributesIds' from passed object on each iteration, therefore every single attribute will be checked and compared , if they do not match (or at least on of them), it just returns a new item in the cart
+                if (
+                    cartItem.id === existingItem.id &&
+                    cartItem.attributes[index].items.id ===
+                        passedAttributeIds[index] // checks on every iteration whether the product is identical or not ( for conditional stacking purposes, quantity)
+                ) {
+                    return {
+                        ...existingItem,
+                        quantity: existingItem.quantity + 1, // if all of them matchs, it gets stacked
+                    };
+                } // checks if the same product exists, but with different attributes, so it will be added as a seperate product in the cart
+                else if (cartItem.id === existingItem.id) {
+                    return { ...existingItem, quantity: 1 };
+                }
+
+                return cartItem; // returns the existing cart items in the  after iteration  which doesn't meet any of the conditions,that meaning its just different product
+            });
             return this.setState({
                 ...this.state,
                 cart: newCartArray,
