@@ -60,11 +60,11 @@ class ProductDetails extends Component {
     // console.log(this.props);
     this.state = {
       activeImg: 0, // referencing imgs by array index numbers
-      attributeActive: '',
     }
 
-    this.selectImgHandler = this.selectImgHandler.bind(this)
-    this.selectAttributeHandler = this.selectAttributeHandler.bind(this)
+    this.selectImgHandler = this.selectImgHandler.bind(this) // displays image based on the user click
+    this.selectAttributeHandler = this.selectAttributeHandler.bind(this) // selects an attribute and dynamically adds the attribute fields name and value in state
+    this.addProductHandler = this.addProductHandler.bind(this)
   }
 
   selectImgHandler(event) {
@@ -77,15 +77,29 @@ class ProductDetails extends Component {
   }
 
   selectAttributeHandler(attribute, name) {
-    console.log(this.state[name]?.id === attribute.id)
     if (attribute.id === this.state[name]?.id) {
+      //  if the method gets called on the selected attribute, it just returns nothing to prevent unnecessary re-renderings
       return null
     }
     this.setState({ ...this.state, [name]: attribute })
   }
 
+  addProductHandler(product, attributes, addCartItem) {
+    const filteredAttributes = attributes.map((attributeSet) => {
+      const filteredAttrItems = attributeSet.items.filter(
+        (attribute) => attribute.id === this.state[attributeSet.name]?.id,
+      )
+
+      return { ...attributeSet, items: filteredAttrItems } // filtering nested items for attributeSet objects
+    })
+
+    return addCartItem({ ...product, attributes: filteredAttributes }) // setting cart item with selected attributes / price?
+  }
+
   render() {
     const productId = this.props.params.productId
+
+    console.log(this.state)
 
     return (
       <Query variables={{ id: productId }} query={SELECTED_PRODUCT}>
@@ -99,13 +113,13 @@ class ProductDetails extends Component {
               gallery,
               id,
               description,
-              categories,
+              category,
               prices,
               brand,
               attributes,
               name,
             } = product
-            console.log(attributes)
+
             return (
               <CurrencyContext.Consumer>
                 {({ activeCurrency }) => {
@@ -114,7 +128,7 @@ class ProductDetails extends Component {
                   )
                   return (
                     <CartContext.Consumer>
-                      {(addCartItem) => (
+                      {({ addCartItem, cart }) => (
                         <ProductContainer>
                           <ProductImgsContainer>
                             <ImgsToSelect>
@@ -142,7 +156,8 @@ class ProductDetails extends Component {
                               <span>{name}</span>
                             </Header>
                             <AttributesContainer>
-                              {attributes.map((attributeSet) => (
+                              {/* mapping on the attributeSets of the products */}
+                              {attributes.map((attributeSet, index) => (
                                 <>
                                   {' '}
                                   <h3>{attributeSet.name}</h3>
@@ -150,6 +165,7 @@ class ProductDetails extends Component {
                                     {attributeSet.type === 'swatch' ? (
                                       // returns swatch type of attributeset jsx, just as color changing blocks
                                       <>
+                                        {/*  SWATCH ATTRIBUTE COMPONENT */}
                                         {attributeSet.items.map((attribute) => (
                                           <SwatchAttributeContainer
                                             color={attribute.value}
@@ -169,28 +185,26 @@ class ProductDetails extends Component {
                                         ))}
                                       </>
                                     ) : (
+                                      // NON SWATCH ATTRIBUTESET COMPONENT
                                       <>
-                                        {attributeSet.items.map(
-                                          (attribute, index) => (
-                                            <TextAttribute
-                                              key={attribute.id}
-                                              onClick={this.selectAttributeHandler.bind(
-                                                null,
-                                                attribute,
-                                                attributeSet.name,
-                                              )}
-                                              className={
-                                                attribute.id ===
-                                                this.state[attributeSet.name]
-                                                  ?.id
-                                                  ? 'active-text-attribute'
-                                                  : ''
-                                              }
-                                            >
-                                              {attribute.displayValue}
-                                            </TextAttribute>
-                                          ),
-                                        )}
+                                        {attributeSet.items.map((attribute) => (
+                                          <TextAttribute
+                                            key={attribute.id}
+                                            onClick={this.selectAttributeHandler.bind(
+                                              null,
+                                              attribute,
+                                              attributeSet.name, // passing attribute to handler to dynamically set the relevant property in state with appropriate value(attribtueObject)
+                                            )}
+                                            className={
+                                              attribute.id ===
+                                              this.state[attributeSet.name]?.id
+                                                ? 'active-text-attribute'
+                                                : ''
+                                            }
+                                          >
+                                            {attribute.displayValue}
+                                          </TextAttribute>
+                                        ))}
                                       </>
                                     )}
                                   </AttrContainer>
@@ -198,7 +212,16 @@ class ProductDetails extends Component {
                               ))}
                             </AttributesContainer>
                             <PriceContainer>
-                              <span>Price:</span>
+                              <span
+                                onClick={this.addProductHandler.bind(
+                                  null,
+                                  product,
+                                  attributes,
+                                  addCartItem,
+                                )}
+                              >
+                                Price:
+                              </span>
                               <span>{`${currency.symbol} ${amount}`}</span>
                             </PriceContainer>
                           </ProductInfoContainer>
