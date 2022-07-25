@@ -1,14 +1,17 @@
-import { Component } from 'react'
+import { Component, Fragment } from 'react'
 import './pdp.styles'
 import { withRouter } from 'react-router-dom'
 import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { withParams } from '../../utils/HOCs/withParams'
 import {
+  AddToCartButton,
   AttrContainer,
   AttributesContainer,
+  DescriptionContainer,
   Header,
   ImgsToSelect,
+  PleaseSelectAttributes,
   PriceContainer,
   ProductContainer,
   ProductImgsContainer,
@@ -20,7 +23,9 @@ import {
 } from './pdp.styles'
 import { CartContext } from '../../contexts/Cart.context'
 import { CurrencyContext } from '../../contexts/currencies.context'
+import DOMPurify from 'dompurify'
 
+let sanitizer = DOMPurify.sanitize
 const SELECTED_PRODUCT = gql`
   query ($id: String!) {
     product(id: $id) {
@@ -59,6 +64,7 @@ class ProductDetails extends Component {
 
     // console.log(this.props);
     this.state = {
+      unselected: false,
       activeImg: 0, // referencing imgs by array index numbers
     }
 
@@ -86,20 +92,30 @@ class ProductDetails extends Component {
 
   addProductHandler(product, attributes, addCartItem) {
     const filteredAttributes = attributes.map((attributeSet) => {
-      const filteredAttrItems = attributeSet.items.filter(
-        (attribute) => attribute.id === this.state[attributeSet.name]?.id,
+      const [filteredAttrItem] = attributeSet.items.filter(
+        (attribute) => attribute.id === this.state[attributeSet.name]?.id, //filtering product attributes based on selected attributes from state
       )
 
-      return { ...attributeSet, items: filteredAttrItems } // filtering nested items for attributeSet objects
+      if (!filteredAttrItem) return null
+
+      return { ...attributeSet, items: filteredAttrItem } // filtering nested items for attributeSet objects
     })
 
-    return addCartItem({ ...product, attributes: filteredAttributes }) // setting cart item with selected attributes / price?
+    const selectedAttributesValidation = filteredAttributes.forEach(
+      (attributeSet) => !attributeSet && null,
+    )
+
+    if (product.attributes.length && !selectedAttributesValidation) {
+      // to prevent adding item to cart ONLY from PDP without selected attributes
+      this.setState({ ...this.state, unselected: true })
+      return null
+    }
+
+    return addCartItem({ ...product, attributes: filteredAttributes }) // setting cart item with selected attributes
   }
 
   render() {
     const productId = this.props.params.productId
-
-    console.log(this.state)
 
     return (
       <Query variables={{ id: productId }} query={SELECTED_PRODUCT}>
@@ -129,7 +145,7 @@ class ProductDetails extends Component {
                   return (
                     <CartContext.Consumer>
                       {({ addCartItem, cart }) => (
-                        <ProductContainer>
+                        <ProductContainer inStock={inStock}>
                           <ProductImgsContainer>
                             <ImgsToSelect>
                               {gallery.map((imgUrl, index) => (
@@ -142,7 +158,7 @@ class ProductDetails extends Component {
                                 />
                               ))}
                             </ImgsToSelect>
-                            <SelectedImgContainer>
+                            <SelectedImgContainer inStock={inStock}>
                               <img
                                 src={gallery[this.state.activeImg]}
                                 alt={`${brand} ${name}`}
@@ -157,19 +173,30 @@ class ProductDetails extends Component {
                             </Header>
                             <AttributesContainer>
                               {/* mapping on the attributeSets of the products */}
-                              {attributes.map((attributeSet, index) => (
-                                <>
-                                  {' '}
-                                  <h3>{attributeSet.name}</h3>
-                                  <AttrContainer key={attributeSet.id}>
+                              {attributes.map((attributeSet) => (
+                                <Fragment key={attributeSet.id}>
+                                  <h3>{attributeSet.name} :</h3>
+                                  <AttrContainer>
+                                    <PleaseSelectAttributes
+                                      unselected={
+                                        this.state.unselected &&
+                                        !this.state[attributeSet.name]
+                                      }
+                                    >
+                                      Please select an attribute!
+                                    </PleaseSelectAttributes>
+
                                     {attributeSet.type === 'swatch' ? (
                                       // returns swatch type of attributeset jsx, just as color changing blocks
                                       <>
-                                        {/*  SWATCH ATTRIBUTE COMPONENT */}
                                         {attributeSet.items.map((attribute) => (
                                           <SwatchAttributeContainer
                                             color={attribute.value}
                                             key={attribute.id}
+                                            unselected={
+                                              !this.state[attributeSet.name] &&
+                                              this.state.unselected
+                                            }
                                             className={
                                               attribute.id ===
                                               this.state[attributeSet.name]?.id
@@ -190,6 +217,10 @@ class ProductDetails extends Component {
                                         {attributeSet.items.map((attribute) => (
                                           <TextAttribute
                                             key={attribute.id}
+                                            unselected={
+                                              !this.state[attributeSet.name] &&
+                                              this.state.unselected
+                                            }
                                             onClick={this.selectAttributeHandler.bind(
                                               null,
                                               attribute,
@@ -202,28 +233,35 @@ class ProductDetails extends Component {
                                                 : ''
                                             }
                                           >
-                                            {attribute.displayValue}
+                                            {attribute.value}
                                           </TextAttribute>
                                         ))}
                                       </>
                                     )}
                                   </AttrContainer>
-                                </>
+                                </Fragment>
                               ))}
                             </AttributesContainer>
                             <PriceContainer>
-                              <span
-                                onClick={this.addProductHandler.bind(
-                                  null,
-                                  product,
-                                  attributes,
-                                  addCartItem,
-                                )}
-                              >
-                                Price:
-                              </span>
+                              <span>Price:</span>
                               <span>{`${currency.symbol} ${amount}`}</span>
                             </PriceContainer>
+                            <AddToCartButton
+                              inStock={inStock}
+                              onClick={this.addProductHandler.bind(
+                                null,
+                                product,
+                                attributes,
+                                addCartItem, // adding product to the cart
+                              )}
+                            >
+                              Add to cart
+                            </AddToCartButton>
+                            <DescriptionContainer
+                              dangerouslySetInnerHTML={{
+                                __html: sanitizer(description),
+                              }} // not parsing with interweave because data comes from backend and its not a form input to cause any harm of XSS attack , so i just sanitize it with dompurifier and setting it directly in the componnent
+                            ></DescriptionContainer>
                           </ProductInfoContainer>
                         </ProductContainer>
                       )}

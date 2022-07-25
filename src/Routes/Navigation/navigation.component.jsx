@@ -67,7 +67,6 @@ class Navigation extends Component {
   } //cleaning up listeners
 
   toggleMobileNav() {
-    console.log(this)
     this.setState(() => {
       return {
         ...this.state,
