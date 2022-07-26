@@ -24,6 +24,7 @@ import {
 import { CartContext } from '../../contexts/Cart.context'
 import { CurrencyContext } from '../../contexts/currencies.context'
 import DOMPurify from 'dompurify'
+import CustomButton from '../../shared/customButton/customButton.component'
 
 let sanitizer = DOMPurify.sanitize
 const SELECTED_PRODUCT = gql`
@@ -190,7 +191,8 @@ class ProductDetails extends Component {
                                       // returns swatch type of attributeset jsx, just as color changing blocks
                                       <>
                                         {attributeSet.items.map((attribute) => (
-                                          <SwatchAttributeContainer
+                                          <CustomButton
+                                            btnType="swatchAttribute"
                                             color={attribute.value}
                                             key={attribute.id}
                                             unselected={
@@ -208,14 +210,15 @@ class ProductDetails extends Component {
                                               attribute,
                                               attributeSet.name,
                                             )}
-                                          ></SwatchAttributeContainer>
+                                          ></CustomButton>
                                         ))}
                                       </>
                                     ) : (
                                       // NON SWATCH ATTRIBUTESET COMPONENT
                                       <>
                                         {attributeSet.items.map((attribute) => (
-                                          <TextAttribute
+                                          <CustomButton
+                                            btnType="textAttribute"
                                             key={attribute.id}
                                             unselected={
                                               !this.state[attributeSet.name] &&
@@ -234,7 +237,7 @@ class ProductDetails extends Component {
                                             }
                                           >
                                             {attribute.value}
-                                          </TextAttribute>
+                                          </CustomButton>
                                         ))}
                                       </>
                                     )}
@@ -246,7 +249,8 @@ class ProductDetails extends Component {
                               <span>Price:</span>
                               <span>{`${currency.symbol} ${amount}`}</span>
                             </PriceContainer>
-                            <AddToCartButton
+                            <CustomButton
+                              btnType="submit"
                               inStock={inStock}
                               onClick={this.addProductHandler.bind(
                                 null,
@@ -256,7 +260,7 @@ class ProductDetails extends Component {
                               )}
                             >
                               Add to cart
-                            </AddToCartButton>
+                            </CustomButton>
                             <DescriptionContainer
                               dangerouslySetInnerHTML={{
                                 __html: sanitizer(description),

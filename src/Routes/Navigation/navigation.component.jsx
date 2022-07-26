@@ -18,6 +18,7 @@ import {
 import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { CurrencyContext } from '../../contexts/currencies.context'
+import { CartContext } from '../../contexts/Cart.context'
 
 const CATEGORY_NAME = gql`
   query {
@@ -76,101 +77,116 @@ class Navigation extends Component {
   }
 
   render() {
-    const { setActiveCurrency, loading, activeCurrency, currencies } =
-      this.context
-    if (loading) return
-    const { symbol } = currencies.find((currencyObj) => {
-      return currencyObj.label === activeCurrency
-    }) // to output a activeCurrency symbol in currency changer
-
     return (
-      <NavigationContainer>
-        {this.state.mobileNavActive && (
-          <Backdrop onClick={this.toggleMobileNav} />
-        )}
-        {/* HANDLING MOBILE NAVIGATION CONDITIONALLY ON RESIZE */}
-        {this.state.mobileNav && (
-          <MobileNavIconContainer onClick={this.toggleMobileNav}>
-            {this.state.mobileNavActive ? (
-              <CloseBtn />
-            ) : (
-              <HamburgerNav /> // changing icons on open/close of mobile navbar with state
-            )}
-          </MobileNavIconContainer>
-        )}
-        <NavListContainer
-          mobileNavActive={this.state.mobileNavActive}
-          mobileNav={this.state.mobileNav}
-        >
-          <Query query={CATEGORY_NAME}>
-            {({ data, loading }) => {
-              if (loading) {
-                return <h2> LOADING SHECHEMA</h2>
-              } else {
-                const { categories } = data
-                return categories.map((categoryObj) => (
-                  <li key={categoryObj.name}>
-                    <NavLink
-                      className={({ isActive }) =>
-                        isActive ? 'nav-active' : ''
-                      }
-                      to={`/${
-                        categoryObj.name === 'all' ? '' : categoryObj.name
-                      }`}
+      <CurrencyContext.Consumer>
+        {({ setActiveCurrency, loading, activeCurrency, currencies }) => {
+          if (loading) return
+          const { symbol } = currencies.find((currencyObj) => {
+            return currencyObj.label === activeCurrency
+          }) // to output a activeCurrency symbol in currency changer
+
+          return (
+            <CartContext.Consumer>
+              {({ cart }) => {
+                return (
+                  <NavigationContainer>
+                    {this.state.mobileNavActive && (
+                      <Backdrop onClick={this.toggleMobileNav} />
+                    )}
+                    {/* HANDLING MOBILE NAVIGATION CONDITIONALLY ON RESIZE */}
+                    {this.state.mobileNav && (
+                      <MobileNavIconContainer onClick={this.toggleMobileNav}>
+                        {this.state.mobileNavActive ? (
+                          <CloseBtn />
+                        ) : (
+                          <HamburgerNav /> // changing icons on open/close of mobile navbar with state
+                        )}
+                      </MobileNavIconContainer>
+                    )}
+                    <NavListContainer
+                      mobileNavActive={this.state.mobileNavActive}
+                      mobileNav={this.state.mobileNav}
                     >
-                      {categoryObj.name}
-                    </NavLink>
-                  </li>
-                ))
-              }
-            }}
-          </Query>
-        </NavListContainer>
+                      <Query query={CATEGORY_NAME}>
+                        {({ data, loading }) => {
+                          if (loading) {
+                            return <h2> LOADING SHECHEMA</h2>
+                          } else {
+                            const { categories } = data
+                            return categories.map((categoryObj) => (
+                              <li key={categoryObj.name}>
+                                <NavLink
+                                  className={({ isActive }) =>
+                                    isActive ? 'nav-active' : ''
+                                  }
+                                  to={`/${
+                                    categoryObj.name === 'all'
+                                      ? ''
+                                      : categoryObj.name
+                                  }`}
+                                >
+                                  {categoryObj.name}
+                                </NavLink>
+                              </li>
+                            ))
+                          }
+                        }}
+                      </Query>
+                    </NavListContainer>
 
-        <NavLogoContainer>
-          <Logo />
-        </NavLogoContainer>
+                    <NavLogoContainer>
+                      <Logo />
+                    </NavLogoContainer>
 
-        {/* DROPDOWN AND CART SEGMENT OF THE NAVBAR */}
+                    {/* DROPDOWN AND CART SEGMENT OF THE NAVBAR */}
 
-        <NavCartContainer>
-          {/* DROPDOWN CURRENCY  TOGGLER*/}
-          <div
-            ref={this.dropdownRef}
-            onClick={() => {
-              this.setState({
-                dropdownActive: !this.state.dropdownActive,
-              })
-            }}
-          >
-            <span>{symbol}</span>
-            {!this.state.dropdownActive ? <VectorDown /> : <VectorUp />}
-          </div>
+                    <NavCartContainer>
+                      {/* DROPDOWN CURRENCY  TOGGLER*/}
+                      <div
+                        ref={this.dropdownRef}
+                        onClick={() => {
+                          this.setState({
+                            dropdownActive: !this.state.dropdownActive,
+                          })
+                        }}
+                      >
+                        <span>{symbol}</span>
+                        {!this.state.dropdownActive ? (
+                          <VectorDown />
+                        ) : (
+                          <VectorUp />
+                        )}
+                      </div>
 
-          <CartIcon></CartIcon>
+                      <CartIcon></CartIcon>
 
-          {/* HIDDEN CUSTOM DROPDOWN */}
-          {this.state.dropdownActive && (
-            <DropdownContainer>
-              {/* state context for currency type conditional display*/}
-              {currencies.map((currencyObj) => (
-                <span
-                  key={currencyObj.symbol}
-                  onClick={() => {
-                    setActiveCurrency(currencyObj.label)
-                    this.setState({
-                      dropdownActive: !this.state.dropdownActive,
-                    })
-                  }}
-                >{`${currencyObj.symbol} ${currencyObj.label}`}</span>
-              ))}
-            </DropdownContainer>
-          )}
-        </NavCartContainer>
-      </NavigationContainer>
+                      {/* HIDDEN CUSTOM DROPDOWN */}
+                      {this.state.dropdownActive && (
+                        <DropdownContainer>
+                          {/* state context for currency type conditional display*/}
+                          {currencies.map((currencyObj) => (
+                            <span
+                              key={currencyObj.symbol}
+                              onClick={() => {
+                                setActiveCurrency(currencyObj.label)
+                                this.setState({
+                                  dropdownActive: !this.state.dropdownActive,
+                                })
+                              }}
+                            >{`${currencyObj.symbol} ${currencyObj.label}`}</span>
+                          ))}
+                        </DropdownContainer>
+                      )}
+                    </NavCartContainer>
+                  </NavigationContainer>
+                )
+              }}
+            </CartContext.Consumer>
+          )
+        }}
+      </CurrencyContext.Consumer>
     )
   }
 }
 
-Navigation.contextType = CurrencyContext
 export default Navigation

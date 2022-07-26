@@ -3,6 +3,7 @@ import { Component, createContext } from 'react'
 export const CartContext = createContext({
   cart: [],
   addCartItem: () => {},
+  cartQuantity: 0,
 })
 
 export class CartProvider extends Component {
@@ -11,7 +12,12 @@ export class CartProvider extends Component {
     this.state = {
       cart: [],
       addCartItem: this.addCartItem.bind(this),
+      cartQuantity: 0,
     }
+  }
+
+  componentDidMount() {
+    // this.setState({ ...this.state, cartQuantity: this.state.cart.length }) QUANTITY SHEICHALICHE
   }
 
   addCartItem(newItem) {
@@ -59,6 +65,13 @@ export class CartProvider extends Component {
     })
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    // console.log(prevState)
+    // if (prevState.cart.length !== this.state.cart.length)
+    //   this.setState({ ...this.state, cartQuantity: this.state.cart.length })
+    // console.log(this.state.cartQuantity)
+  }
+
   //cart count
   //add item to cart
   //quantity of the same object
@@ -66,7 +79,7 @@ export class CartProvider extends Component {
   //cartIsOpen
 
   render() {
-    console.log(this.state.cart)
+    console.log(this.state.cartQuantity)
 
     return (
       <CartContext.Provider value={this.state}>
