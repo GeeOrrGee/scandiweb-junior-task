@@ -8,10 +8,12 @@ import {
 class CustomButton extends Component {
   constructor(props) {
     super(props)
+    this.addProcuctToCart = this.props.addProcuctToCart
   }
 
   render() {
     const { btnType, children, ...otherProps } = this.props
+    // console.log(this.props)
 
     const buttonTypes = {
       swatchAttr: 'swatchAttribute',

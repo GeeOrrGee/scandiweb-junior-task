@@ -30,7 +30,9 @@ export const PleaseSelectAttributes = styled.p`
 export const DescriptionContainer = styled.div`
   font-size: 1.2rem;
   line-height: 1.6;
-  max-width: 25rem;
+  /* max-width: rem; */
+  width: 100%;
+  padding-bottom: 2rem;
 `
 
 export const PriceContainer = styled.div`

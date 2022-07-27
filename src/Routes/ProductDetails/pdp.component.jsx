@@ -1,11 +1,9 @@
 import { Component, Fragment } from 'react'
 import './pdp.styles'
-import { withRouter } from 'react-router-dom'
 import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { withParams } from '../../utils/HOCs/withParams'
 import {
-  AddToCartButton,
   AttrContainer,
   AttributesContainer,
   DescriptionContainer,
@@ -17,9 +15,6 @@ import {
   ProductImgsContainer,
   ProductInfoContainer,
   SelectedImgContainer,
-  SwatchAttributeContainer,
-  TextAttribute,
-  TextAttributeContainer,
 } from './pdp.styles'
 import { CartContext } from '../../contexts/Cart.context'
 import { CurrencyContext } from '../../contexts/currencies.context'
@@ -102,12 +97,14 @@ class ProductDetails extends Component {
       return { ...attributeSet, items: filteredAttrItem } // filtering nested items for attributeSet objects
     })
 
-    const selectedAttributesValidation = filteredAttributes.forEach(
-      (attributeSet) => !attributeSet && null,
-    )
+    const selectedAttributesValidation = filteredAttributes.filter(
+      (attributeSet) => attributeSet === null || undefined,
+    ) //checking the unselected attributes in selected array
 
-    if (product.attributes.length && !selectedAttributesValidation) {
+    console.log(selectedAttributesValidation)
+    if (product.attributes.length && selectedAttributesValidation.length) {
       // to prevent adding item to cart ONLY from PDP without selected attributes
+      console.log(selectedAttributesValidation)
       this.setState({ ...this.state, unselected: true })
       return null
     }
@@ -128,9 +125,9 @@ class ProductDetails extends Component {
             const {
               inStock,
               gallery,
-              id,
+
               description,
-              category,
+
               prices,
               brand,
               attributes,

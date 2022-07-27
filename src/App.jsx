@@ -4,10 +4,10 @@ import './App.css'
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 import { Routes, Route } from 'react-router-dom'
-import ProductDetails from './Routes/ProductDetails/pdp.component'
+
 import Navigation from './Routes/Navigation/navigation.component'
 import CategoryPage from './Routes/CategoryPage/CategoryPage.routes'
-import ProductsList from './Routes/CategoryPage/PLP/productsList.component'
+
 const ALL_DATA = gql`
   query mainData {
     categories {

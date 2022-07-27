@@ -79,8 +79,6 @@ export class CartProvider extends Component {
   //cartIsOpen
 
   render() {
-    console.log(this.state.cartQuantity)
-
     return (
       <CartContext.Provider value={this.state}>
         {this.props.children}
