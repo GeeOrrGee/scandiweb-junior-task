@@ -101,10 +101,9 @@ class ProductDetails extends Component {
       (attributeSet) => attributeSet === null || undefined,
     ) //checking the unselected attributes in selected array
 
-    console.log(selectedAttributesValidation)
     if (product.attributes.length && selectedAttributesValidation.length) {
       // to prevent adding item to cart ONLY from PDP without selected attributes
-      console.log(selectedAttributesValidation)
+
       this.setState({ ...this.state, unselected: true })
       return null
     }
@@ -125,21 +124,20 @@ class ProductDetails extends Component {
             const {
               inStock,
               gallery,
-
               description,
-
               prices,
               brand,
               attributes,
               name,
             } = product
-
+            console.log(attributes)
             return (
               <CurrencyContext.Consumer>
                 {({ activeCurrency }) => {
                   const { amount, currency } = prices.find(
                     ({ amount, currency }) => currency.label === activeCurrency,
                   )
+
                   return (
                     <CartContext.Consumer>
                       {({ addCartItem, cart }) => (

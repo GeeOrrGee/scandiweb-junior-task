@@ -20,7 +20,7 @@ class CategoryItem extends Component {
     this.toggleHoverIcon = this.toggleHoverIcon.bind(this)
     this.redirectProduct = this.redirectProduct.bind(this)
     this.hoverOverHandler = this.hoverOverHandler.bind(this)
-
+    this.cartClickHandler = this.cartClickHandler.bind(this)
     this.cartIconRef = createRef()
   }
 
@@ -40,11 +40,11 @@ class CategoryItem extends Component {
   redirectProduct(event) {
     if (event.target.tagName === 'circle') return // was using created ref to prevent the redirecting, but redirect path[0] was throwing error because event.path was undefined, so this condition is sufficient for this particular functionality
 
-    if (!this.state.redirectToProductPage) {
-      this.setState({ ...this.state, redirectToProductPage: true })
-    } else {
-      this.setState({ ...this.state, redirectToProductPage: false })
-    }
+    this.setState({ ...this.state, redirectToProductPage: true })
+    // if (!this.state.redirectToProductPage) {
+    // } else {
+    //   this.setState({ ...this.state, redirectToProductPage: false })
+    // }
   }
 
   hoverOverHandler() {
@@ -52,6 +52,12 @@ class CategoryItem extends Component {
       ...this.state,
       hoverIcon: !this.state.hoverIcon,
     })
+  }
+
+  cartClickHandler(product, addCartItem) {
+    if (product.attributes.length) return
+
+    return addCartItem(product)
   }
 
   componentWillUnmount() {
@@ -62,8 +68,10 @@ class CategoryItem extends Component {
     const { prices, inStock, gallery, name, brand, category, attributes, id } =
       this.props.product
 
-    const defaultAttributes = attributes.map((attributeObj) => {
-      return { ...attributeObj, items: attributeObj.items[0] }
+    // if (this.props.product.name === 'iMac 2021') console.log(this.props.product)
+    // console.log(this.props.product)
+    const [defaultAttributes] = attributes.filter((attributeObj) => {
+      return attributeObj === (undefined || null)
     }) // setting default attributes for product for add cart functionality from PLP
 
     return (
@@ -78,7 +86,7 @@ class CategoryItem extends Component {
               {({ addCartItem }) => (
                 <>
                   {this.state.redirectToProductPage && (
-                    <Navigate to={`/${category}/${id}`} />
+                    <Navigate to={`${id}`} />
                   )}
 
                   <ProductContainer
@@ -93,10 +101,11 @@ class CategoryItem extends Component {
                         <ProductHoverIcon
                           style={{ zIndex: '5' }}
                           ref={this.cartIconRef} // to add product from PLP , as it was noted on FAQ
-                          onClick={addCartItem.bind(null, {
-                            ...this.props.product,
-                            attributes: defaultAttributes,
-                          })} // passing product into the cart context setState
+                          onClick={this.cartClickHandler.bind(
+                            null,
+                            this.props.product,
+                            addCartItem,
+                          )} // passing product into the cart context setState
                         />
                       )}
                     </ProductImgContainer>
