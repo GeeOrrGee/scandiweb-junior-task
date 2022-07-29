@@ -1,4 +1,5 @@
 import { Component, createContext } from 'react'
+import { CurrencyContext } from './currencies.context'
 
 export const CartContext = createContext({
   cart: [],
@@ -16,6 +17,8 @@ export class CartProvider extends Component {
       addCartItem: this.addCartItem.bind(this),
       isCartOpen: false,
       setIsCartOpen: this.setIsCartOpen.bind(this),
+      cartQuantity: 0,
+      totalvalue: 0,
     }
   }
 
@@ -30,6 +33,7 @@ export class CartProvider extends Component {
       (cartItem) => newItem.id === cartItem.id,
     )
     if (existingItems.length) {
+      ////////////////
       const filteredCartItems = this.state.cart.map((cartItem) => {
         if (cartItem.id !== newItem.id) return cartItem
 
@@ -46,57 +50,27 @@ export class CartProvider extends Component {
         } else {
           return cartItem
         }
-      })
-      // console.log(filteredCartItems)
-      const sameIdSameAttributesCheck = existingItems.find((cartItem) =>
-        cartItem.attributes.filter(
+      }) // searching for identical  item to increment in the cart
+
+      // creating a secondary check to add a newItem with different attributes but with the same product id/type
+      const sameIdSameAttributesCheck = existingItems.filter((cartItem) => {
+        const matchingAttributes = cartItem.attributes.filter(
           (attributeSet, index) =>
             attributeSet.items.id === newItem.attributes[index].items.id,
-        ),
-      )
+        )
+
+        return matchingAttributes.length === newItem.attributes.length
+      })
+
+      if (!sameIdSameAttributesCheck.length)
+        filteredCartItems.push({ ...newItem, quantity: 1 })
 
       return this.setState({ ...this.state, cart: [...filteredCartItems] })
     }
 
-    // if (existingItems.length) {
-    //   const { attributes } = newItem
-    //   const [matchingAttributeCheck] = existingItems.filter((existingItem) => {
-    //     if (!attributes.length) return true // for products without attributes
-    //     const wrapper = existingItem.attributes.filter(
-    //       (attributeSet, index) => {
-    //         return attributeSet.items.id === attributes[index].items.id
-    //       },
-    //     )
-
-    //     console.log(wrapper)
-    //     return wrapper
-    //   })
-
-    //   console.log(matchingAttributeCheck)
-
-    //   // checks if the newItem is exactly the same as existing item (id,attributeIds), incrementing quantity
-    //   if (matchingAttributeCheck) {
-    //     const newCartArray = this.state.cart.map((cartItem) =>
-    //       cartItem.id === newItem.id
-    //         ? {
-    //             ...cartItem,
-    //             quantity: cartItem.quantity + 1,
-    //           }
-    //         : cartItem,
-    //     )
-    //     return this.setState({ ...this.state, cart: newCartArray })
-    //   } else {
-    //     // adds a same product with different attributes to the cart as a seperate object
-    //     return this.setState({
-    //       ...this.state,
-    //       cart: [...this.state.cart, { ...newItem, quantity: 1 }],
-    //     })
-    //   }
-    // }
-    //if the item doesn't already exist in the cart, it is directly added to the cart
     return this.setState({
       ...this.state,
-      cart: [...this.state.cart, { ...newItem, quantity: 1 }],
+      cart: [...this.state.cart, { ...newItem, quantity: 1 }], // adding a newItem to the cart if there's no existing items with the same product id
     })
   }
 
@@ -105,15 +79,35 @@ export class CartProvider extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     // console.log(prevState, this.state)
-
-    const quantityPerItemCheck = this.state.cart.filter(
-      (cartItem, index) =>
-        cartItem?.quantity === prevState.cart[index]?.quantity,
+    const previousTotalQuantity = prevState.cart.reduce(
+      (acc, curr) => acc + curr.quantity,
+      0,
     )
-    // console.log(this.state.cart)
-    // if (prevState.cart.length !== this.state.cart.length)
-    //   this.setState({ ...this.state, cartQuantity: this.state.cart.length })
-    // console.log(this.state.cartQuantity)
+    const currentTotalQuantity = this.state.cart.reduce(
+      (acc, curr) => acc + curr.quantity,
+      0,
+    )
+
+    const { activeCurrency } = this.context
+    const totalValue = this.state.cart.reduce((acc, curr) => {
+      const [filteredPrice] = curr.prices.filter(
+        (priceObj) => priceObj.currency.label === activeCurrency,
+      )
+      return acc + filteredPrice.amount * curr.quantity
+    }, 0) //accumulating total value based on the activeCurrency
+
+    if (currentTotalQuantity !== previousTotalQuantity) {
+      return this.setState({
+        ...this.state,
+        cartQuantity: currentTotalQuantity,
+        totalValue: parseFloat(totalValue.toFixed(2)), //just to keep it as a number
+      })
+    } else if (prevState.totalValue !== totalValue) {
+      return this.setState({
+        ...this.state,
+        totalValue: parseFloat(totalValue.toFixed(2)), // to re render everything on active currency change
+      })
+    }
   }
 
   //cart count
@@ -123,6 +117,7 @@ export class CartProvider extends Component {
   //cartIsOpen
 
   render() {
+    console.log(this.state.totalValue)
     return (
       <CartContext.Provider value={this.state}>
         {this.props.children}
@@ -130,3 +125,5 @@ export class CartProvider extends Component {
     )
   }
 }
+
+CartProvider.contextType = CurrencyContext

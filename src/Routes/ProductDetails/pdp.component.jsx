@@ -130,7 +130,6 @@ class ProductDetails extends Component {
               attributes,
               name,
             } = product
-            console.log(attributes)
             return (
               <CurrencyContext.Consumer>
                 {({ activeCurrency }) => {

@@ -6,19 +6,21 @@ import { NavLink, Link } from 'react-router-dom'
 import { ReactComponent as VectorDown } from '../../assets/vectors/Vector-Down.svg'
 import { ReactComponent as VectorUp } from '../../assets/vectors/Vector-Up.svg'
 import { ReactComponent as CartIcon } from '../../assets/navigation-logo/Vector.svg'
+import Backdrop from '../../shared/Backdrop/backdrop.component'
 import {
   DropdownContainer,
   MobileNavIconContainer,
   NavCartContainer,
   NavigationContainer,
   NavListContainer,
-  Backdrop,
   NavLogoContainer,
+  CartIconContainer,
 } from './navigation.styles.jsx'
 import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { CurrencyContext } from '../../contexts/currencies.context'
 import { CartContext } from '../../contexts/Cart.context'
+import MiniCart from '../../components/MiniCart/cart-item/cart-item.component'
 
 const CATEGORY_NAME = gql`
   query {
@@ -35,6 +37,7 @@ class Navigation extends Component {
       mobileNav: false,
       dropdownActive: false,
       mobileNavActive: false,
+      minicartActive: false,
     }
     this.dropdownRef = createRef()
     this.toggleMobileNav = this.toggleMobileNav.bind(this) // handles toggling the mobile navigation UI (slide-in)
@@ -63,17 +66,28 @@ class Navigation extends Component {
     }
   } // conditional mobileNavBar rendering logic
 
+  displayMinicart = () => {
+    this.setState({ ...this.state, minicartActive: !this.state.minicartActive })
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.addingListeners)
   } //cleaning up listeners
 
   toggleMobileNav() {
-    this.setState(() => {
-      return {
-        ...this.state,
-        mobileNavActive: !this.state.mobileNavActive,
-      }
-    })
+    if (this.state.mobileNavActive) {
+      return this.setState({ ...this.state, mobileNavActive: false })
+    } else if (!this.state.mobileNavActive) {
+      return this.setState({ ...this.state, mobileNavActive: true })
+    }
+  }
+
+  backdropHandler = (event) => {
+    if (this.state.mobileNavActive) {
+      return this.setState({ ...this.state, mobileNavActive: false })
+    } else if (this.state.minicartActive) {
+      this.setState({ ...this.state, minicartActive: false })
+    }
   }
 
   render() {
@@ -87,98 +101,120 @@ class Navigation extends Component {
 
           return (
             <CartContext.Consumer>
-              {({ cart }) => {
+              {({ cart, cartQuantity }) => {
+                console.log(cartQuantity)
                 return (
-                  <NavigationContainer>
-                    {this.state.mobileNavActive && (
-                      <Backdrop onClick={this.toggleMobileNav} />
+                  <>
+                    {(this.state.mobileNavActive ||
+                      this.state.minicartActive) && (
+                      <Backdrop
+                        onClick={this.backdropHandler}
+                        type={
+                          this.state.mobileNavActive
+                            ? 'full-screen'
+                            : 'standard'
+                        }
+                      />
                     )}
-                    {/* HANDLING MOBILE NAVIGATION CONDITIONALLY ON RESIZE */}
-                    {this.state.mobileNav && (
-                      <MobileNavIconContainer onClick={this.toggleMobileNav}>
-                        {this.state.mobileNavActive ? (
-                          <CloseBtn />
-                        ) : (
-                          <HamburgerNav /> // changing icons on open/close of mobile navbar with state
-                        )}
-                      </MobileNavIconContainer>
-                    )}
-                    <NavListContainer
+                    <NavigationContainer
                       mobileNavActive={this.state.mobileNavActive}
-                      mobileNav={this.state.mobileNav}
                     >
-                      <Query query={CATEGORY_NAME}>
-                        {({ data, loading }) => {
-                          if (loading) {
-                            return <h2> LOADING SHECHEMA</h2>
-                          } else {
-                            const { categories } = data
-                            return categories.map((categoryObj) => (
-                              <li key={categoryObj.name}>
-                                <NavLink
-                                  className={({ isActive }) =>
-                                    isActive ? 'nav-active' : ''
-                                  }
-                                  to={`/${
-                                    categoryObj.name === 'all'
-                                      ? ''
-                                      : categoryObj.name
-                                  }`}
-                                >
-                                  {categoryObj.name}
-                                </NavLink>
-                              </li>
-                            ))
-                          }
-                        }}
-                      </Query>
-                    </NavListContainer>
-
-                    <NavLogoContainer>
-                      <Logo />
-                    </NavLogoContainer>
-
-                    {/* DROPDOWN AND CART SEGMENT OF THE NAVBAR */}
-
-                    <NavCartContainer>
-                      {/* DROPDOWN CURRENCY  TOGGLER*/}
-                      <div
-                        ref={this.dropdownRef}
-                        onClick={() => {
-                          this.setState({
-                            dropdownActive: !this.state.dropdownActive,
-                          })
-                        }}
-                      >
-                        <span>{symbol}</span>
-                        {!this.state.dropdownActive ? (
-                          <VectorDown />
-                        ) : (
-                          <VectorUp />
-                        )}
-                      </div>
-
-                      <CartIcon></CartIcon>
-
-                      {/* HIDDEN CUSTOM DROPDOWN */}
-                      {this.state.dropdownActive && (
-                        <DropdownContainer>
-                          {/* state context for currency type conditional display*/}
-                          {currencies.map((currencyObj) => (
-                            <span
-                              key={currencyObj.symbol}
-                              onClick={() => {
-                                setActiveCurrency(currencyObj.label)
-                                this.setState({
-                                  dropdownActive: !this.state.dropdownActive,
-                                })
-                              }}
-                            >{`${currencyObj.symbol} ${currencyObj.label}`}</span>
-                          ))}
-                        </DropdownContainer>
+                      {/* HANDLING MOBILE NAVIGATION CONDITIONALLY ON RESIZE */}
+                      {this.state.mobileNav && (
+                        <MobileNavIconContainer onClick={this.toggleMobileNav}>
+                          {this.state.mobileNavActive ? (
+                            <CloseBtn />
+                          ) : (
+                            <HamburgerNav /> // changing icons on open/close of mobile navbar with state
+                          )}
+                        </MobileNavIconContainer>
                       )}
-                    </NavCartContainer>
-                  </NavigationContainer>
+                      <NavListContainer
+                        mobileNavActive={this.state.mobileNavActive}
+                        mobileNav={this.state.mobileNav}
+                      >
+                        <Query query={CATEGORY_NAME}>
+                          {({ data, loading }) => {
+                            if (loading) {
+                              return <h2> LOADING SHECHEMA</h2>
+                            } else {
+                              const { categories } = data
+                              return categories.map((categoryObj) => (
+                                <li key={categoryObj.name}>
+                                  <NavLink
+                                    className={({ isActive }) =>
+                                      isActive ? 'nav-active' : ''
+                                    }
+                                    to={`/${
+                                      categoryObj.name === 'all'
+                                        ? ''
+                                        : categoryObj.name
+                                    }`}
+                                  >
+                                    {categoryObj.name}
+                                  </NavLink>
+                                </li>
+                              ))
+                            }
+                          }}
+                        </Query>
+                      </NavListContainer>
+
+                      <NavLogoContainer>
+                        <Logo />
+                      </NavLogoContainer>
+
+                      {/* DROPDOWN AND CART SEGMENT OF THE NAVBAR */}
+
+                      <NavCartContainer>
+                        {/* DROPDOWN CURRENCY  TOGGLER*/}
+                        {this.state.minicartActive && (
+                          <MiniCart cartItems={cart} />
+                        )}
+                        <div
+                          ref={this.dropdownRef}
+                          onClick={() => {
+                            this.setState({
+                              dropdownActive: !this.state.dropdownActive,
+                            })
+                          }}
+                        >
+                          <span>{symbol}</span>
+                          {!this.state.dropdownActive ? (
+                            <VectorDown />
+                          ) : (
+                            <VectorUp />
+                          )}
+                        </div>
+
+                        <CartIconContainer
+                          onClick={this.displayMinicart}
+                          display={cartQuantity}
+                        >
+                          <span>{cartQuantity}</span>
+                          <CartIcon></CartIcon>
+                        </CartIconContainer>
+
+                        {/* HIDDEN CUSTOM DROPDOWN */}
+                        {this.state.dropdownActive && (
+                          <DropdownContainer>
+                            {/* state context for currency type conditional display*/}
+                            {currencies.map((currencyObj) => (
+                              <span
+                                key={currencyObj.symbol}
+                                onClick={() => {
+                                  setActiveCurrency(currencyObj.label)
+                                  this.setState({
+                                    dropdownActive: !this.state.dropdownActive,
+                                  })
+                                }}
+                              >{`${currencyObj.symbol} ${currencyObj.label}`}</span>
+                            ))}
+                          </DropdownContainer>
+                        )}
+                      </NavCartContainer>
+                    </NavigationContainer>
+                  </>
                 )
               }}
             </CartContext.Consumer>

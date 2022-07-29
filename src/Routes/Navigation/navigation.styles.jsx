@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-
+import { ReactComponent as Carticon } from '../../assets/navigation-logo/Vector.svg'
 export const MobileNavIconContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -67,12 +67,39 @@ export const DropdownContainer = styled.div`
   }
 `
 
+export const CartIconContainer = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    position: absolute;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: black;
+    border-radius: 5rem;
+    color: #fff;
+    padding-block: 0.4rem;
+    text-align: center;
+    top: 10%;
+    left: 105%;
+    width: 1.7rem;
+    height: 1.7rem;
+    text-align: center;
+    display: none;
+    /* opacity: 0; */
+    transform: translate(-50%, -50%);
+    ${(props) => (props.display !== 0 ? `display:block;` : '')};
+  }
+`
+
 export const NavCartContainer = styled.div`
   font-size: 1.4em;
   display: flex;
   gap: 3rem;
   align-items: flex-start;
-
+  cursor: pointer;
   margin-top: 1rem;
   width: 15rem;
   justify-content: flex-end;
@@ -158,7 +185,7 @@ export const NavListContainer = styled.ul`
         max-width: 25rem;
         align-items:center;
         padding: 10rem;
-        background-color: #fff;
+        background-color: #fff !important;
         z-index:8;
         transform: translateX(-100%);
         
@@ -173,9 +200,7 @@ export const NavListContainer = styled.ul`
         `}
   ${(props) =>
     props.mobileNavActive &&
-    `
-        
-        transition: all 0.3s;
+    `   transition: all 0.3s;
         animation: .3s ease forwards slideIn;
         li{
             opacity:0;
@@ -197,16 +222,6 @@ export const NavListContainer = styled.ul`
   }
 `
 
-export const Backdrop = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: rgb(0, 0, 0, 0.2);
-  z-index: 5;
-`
-
 export const NavigationContainer = styled.nav`
   display: flex;
   width: 85vw;
@@ -223,9 +238,10 @@ export const NavigationContainer = styled.nav`
   justify-content: space-between;
   align-items: flex-start;
   margin: 2rem auto;
-  z-index: 2;
+  z-index: 5;
   height: 6rem;
-
+  ${({ mobileNavActive }) =>
+    mobileNavActive && '  background-color: rgb(0, 0, 0, 0);'}
   @media (max-width: 47.5em) {
     align-items: center;
   }
