@@ -74,6 +74,28 @@ export class CartProvider extends Component {
     })
   }
 
+  //decrement quantity, if quantity=0 removes cartItem
+  removeCartItem = (deleteItem) => {
+    const modifiedCart = this.state.cart
+      .map((cartItem) => {
+        if (cartItem.id !== deleteItem.id) return cartItem
+
+        const matchingAttributes = cartItem.attributes.filter(
+          (attributeSet, index2) =>
+            attributeSet.items.id === deleteItem.attributes[index2].items.id,
+        )
+
+        if (matchingAttributes.length === cartItem.attributes.length)
+          return { ...deleteItem, quantity: deleteItem.quantity - 1 }
+
+        return cartItem
+      })
+      .filter((cartItem) => cartItem.quantity > 0)
+
+    // check this
+    return this.setState({ ...this.state, cart: modifiedCart })
+  }
+
   setIsCartOpen(boolean) {
     this.setState({ ...this.state, isCartOpen: boolean })
   }
