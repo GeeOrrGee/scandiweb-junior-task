@@ -33,6 +33,7 @@ export const SwatchAttribute = styled.div`
     border: solid 0.1rem #fff;
     outline: solid 0.1rem #5ece7b;
   }
+  pointer-events: inherit;
   ${({ unselected }) =>
     unselected
       ? `
@@ -49,8 +50,8 @@ export const TextAttribute = styled.span`
   font-size: clamp(0.6rem, 1vw, 1.6rem);
   color: #1d1f22;
   text-align: center;
-
   cursor: pointer;
+
   transition: all 0.3s;
   &.active-text-attribute {
     background-color: #1d1f22;

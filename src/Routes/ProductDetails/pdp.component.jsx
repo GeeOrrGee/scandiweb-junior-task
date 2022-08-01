@@ -19,8 +19,7 @@ import {
 import { CartContext } from '../../contexts/Cart.context'
 import { CurrencyContext } from '../../contexts/currencies.context'
 import DOMPurify from 'dompurify'
-import CustomButton from '../../shared/customButton/customButton.component'
-
+import { CustomButton } from '../../shared/customButton/customButton.component'
 let sanitizer = DOMPurify.sanitize
 const SELECTED_PRODUCT = gql`
   query ($id: String!) {
@@ -161,7 +160,7 @@ class ProductDetails extends Component {
                             </SelectedImgContainer>
                           </ProductImgsContainer>
 
-                          <ProductInfoContainer>
+                          <ProductInfoContainer inStock={inStock}>
                             <Header>
                               <h2>{brand}</h2>
                               <span>{name}</span>
@@ -181,60 +180,37 @@ class ProductDetails extends Component {
                                       Please select an attribute!
                                     </PleaseSelectAttributes>
 
-                                    {attributeSet.type === 'swatch' ? (
-                                      // returns swatch type of attributeset jsx, just as color changing blocks
-                                      <>
-                                        {attributeSet.items.map((attribute) => (
-                                          <CustomButton
-                                            btnType="swatchAttribute"
-                                            color={attribute.value}
-                                            key={attribute.id}
-                                            unselected={
-                                              !this.state[attributeSet.name] &&
-                                              this.state.unselected
-                                            }
-                                            className={
-                                              attribute.id ===
-                                              this.state[attributeSet.name]?.id
-                                                ? 'active-swatch-attribute'
-                                                : ''
-                                            }
-                                            onClick={this.selectAttributeHandler.bind(
-                                              null,
-                                              attribute,
-                                              attributeSet.name,
-                                            )}
-                                          ></CustomButton>
-                                        ))}
-                                      </>
-                                    ) : (
-                                      // NON SWATCH ATTRIBUTESET COMPONENT
-                                      <>
-                                        {attributeSet.items.map((attribute) => (
-                                          <CustomButton
-                                            btnType="textAttribute"
-                                            key={attribute.id}
-                                            unselected={
-                                              !this.state[attributeSet.name] &&
-                                              this.state.unselected
-                                            }
-                                            onClick={this.selectAttributeHandler.bind(
-                                              null,
-                                              attribute,
-                                              attributeSet.name, // passing attribute to handler to dynamically set the relevant property in state with appropriate value(attribtueObject)
-                                            )}
-                                            className={
-                                              attribute.id ===
-                                              this.state[attributeSet.name]?.id
-                                                ? 'active-text-attribute'
-                                                : ''
-                                            }
-                                          >
-                                            {attribute.value}
-                                          </CustomButton>
-                                        ))}
-                                      </>
-                                    )}
+                                    {/* // returns swatch type of attributeset jsx, just as color changing blocks */}
+
+                                    {attributeSet.items.map((attribute) => (
+                                      <CustomButton
+                                        btnType={attributeSet.type}
+                                        color={
+                                          attributeSet.type === 'swatch'
+                                            ? attribute.value
+                                            : null
+                                        }
+                                        key={attribute.id}
+                                        unselected={
+                                          !this.state[attributeSet.name] &&
+                                          this.state.unselected
+                                        }
+                                        className={
+                                          attribute.id ===
+                                          this.state[attributeSet.name]?.id
+                                            ? `active-${attributeSet.type}-attribute`
+                                            : ''
+                                        }
+                                        onClick={this.selectAttributeHandler.bind(
+                                          null,
+                                          attribute,
+                                          attributeSet.name,
+                                        )}
+                                      >
+                                        {attributeSet.type === 'text' &&
+                                          attribute.value}
+                                      </CustomButton>
+                                    ))}
                                   </AttrContainer>
                                 </Fragment>
                               ))}

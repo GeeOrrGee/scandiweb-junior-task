@@ -5,7 +5,7 @@ import {
   TextAttribute,
 } from './customButton.styles'
 
-class CustomButton extends Component {
+export class CustomButton extends Component {
   constructor(props) {
     super(props)
     this.addProcuctToCart = this.props.addProcuctToCart
@@ -13,11 +13,10 @@ class CustomButton extends Component {
 
   render() {
     const { btnType, children, ...otherProps } = this.props
-    // console.log(this.props)
 
     const buttonTypes = {
-      swatchAttr: 'swatchAttribute',
-      textAttr: 'textAttribute',
+      swatchAttr: 'swatch',
+      textAttr: 'text',
       greenSubmit: 'submit',
     }
     const getButtonType = (btnType) => {
@@ -33,5 +32,3 @@ class CustomButton extends Component {
     return <Button {...otherProps}>{children}</Button>
   }
 }
-
-export default CustomButton

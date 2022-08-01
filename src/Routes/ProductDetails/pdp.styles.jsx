@@ -86,8 +86,7 @@ export const ProductInfoContainer = styled.figure`
   height: 100%;
   width: 100%;
   max-width: 30rem;
-  /* justify-content: center;
-    align-items: center; */
+  ${({ inStock }) => !inStock && `pointer-events:none;`}
 `
 
 export const SelectedImgContainer = styled.div`
@@ -153,7 +152,7 @@ export const ProductContainer = styled.section`
   ${({ inStock }) =>
     !inStock &&
     `
-
+  
   opacity:0.6;
 `}
   width: 100%;

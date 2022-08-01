@@ -20,7 +20,7 @@ import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { CurrencyContext } from '../../contexts/currencies.context'
 import { CartContext } from '../../contexts/Cart.context'
-import MiniCart from '../../components/MiniCart/cart-item/cart-item.component'
+import MiniCart from '../../components/MiniCart/minicart.component'
 
 const CATEGORY_NAME = gql`
   query {
@@ -102,7 +102,6 @@ class Navigation extends Component {
           return (
             <CartContext.Consumer>
               {({ cart, cartQuantity }) => {
-                console.log(cartQuantity)
                 return (
                   <>
                     {(this.state.mobileNavActive ||
@@ -168,9 +167,6 @@ class Navigation extends Component {
 
                       <NavCartContainer>
                         {/* DROPDOWN CURRENCY  TOGGLER*/}
-                        {this.state.minicartActive && (
-                          <MiniCart cartItems={cart} />
-                        )}
                         <div
                           ref={this.dropdownRef}
                           onClick={() => {
@@ -194,6 +190,9 @@ class Navigation extends Component {
                           <span>{cartQuantity}</span>
                           <CartIcon></CartIcon>
                         </CartIconContainer>
+                        {this.state.minicartActive && (
+                          <MiniCart cartItems={cart} />
+                        )}
 
                         {/* HIDDEN CUSTOM DROPDOWN */}
                         {this.state.dropdownActive && (

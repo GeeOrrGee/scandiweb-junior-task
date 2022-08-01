@@ -7,6 +7,7 @@ export const CartContext = createContext({
   cartQuantity: 0,
   setIsCartOpen: () => {},
   isCartOpen: false,
+  removeCartItem: () => {},
 })
 
 export class CartProvider extends Component {
@@ -19,6 +20,7 @@ export class CartProvider extends Component {
       setIsCartOpen: this.setIsCartOpen.bind(this),
       cartQuantity: 0,
       totalvalue: 0,
+      removeCartItem: this.removeCartItem,
     }
   }
 
@@ -81,8 +83,8 @@ export class CartProvider extends Component {
         if (cartItem.id !== deleteItem.id) return cartItem
 
         const matchingAttributes = cartItem.attributes.filter(
-          (attributeSet, index2) =>
-            attributeSet.items.id === deleteItem.attributes[index2].items.id,
+          (attributeSet, index) =>
+            attributeSet.items.id === deleteItem.attributes[index].items.id,
         )
 
         if (matchingAttributes.length === cartItem.attributes.length)
@@ -92,7 +94,6 @@ export class CartProvider extends Component {
       })
       .filter((cartItem) => cartItem.quantity > 0)
 
-    // check this
     return this.setState({ ...this.state, cart: modifiedCart })
   }
 
@@ -101,6 +102,7 @@ export class CartProvider extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     // console.log(prevState, this.state)
+
     const previousTotalQuantity = prevState.cart.reduce(
       (acc, curr) => acc + curr.quantity,
       0,
@@ -111,23 +113,27 @@ export class CartProvider extends Component {
     )
 
     const { activeCurrency } = this.context
-    const totalValue = this.state.cart.reduce((acc, curr) => {
-      const [filteredPrice] = curr.prices.filter(
-        (priceObj) => priceObj.currency.label === activeCurrency,
-      )
-      return acc + filteredPrice.amount * curr.quantity
-    }, 0) //accumulating total value based on the activeCurrency
-
+    const totalValue = parseFloat(
+      // to omit the JS quirkiness with numbers :)
+      this.state.cart
+        .reduce((acc, curr) => {
+          const [filteredPrice] = curr.prices.filter(
+            (priceObj) => priceObj.currency.label === activeCurrency,
+          )
+          return acc + filteredPrice.amount * curr.quantity
+        }, 0)
+        .toFixed(2),
+    ) //accumulating total value based on the activeCurrency
     if (currentTotalQuantity !== previousTotalQuantity) {
       return this.setState({
         ...this.state,
         cartQuantity: currentTotalQuantity,
-        totalValue: parseFloat(totalValue.toFixed(2)), //just to keep it as a number
+        totalValue: totalValue,
       })
     } else if (prevState.totalValue !== totalValue) {
       return this.setState({
         ...this.state,
-        totalValue: parseFloat(totalValue.toFixed(2)), // to re render everything on active currency change
+        totalValue: totalValue,
       })
     }
   }
@@ -139,7 +145,6 @@ export class CartProvider extends Component {
   //cartIsOpen
 
   render() {
-    console.log(this.state.totalValue)
     return (
       <CartContext.Provider value={this.state}>
         {this.props.children}

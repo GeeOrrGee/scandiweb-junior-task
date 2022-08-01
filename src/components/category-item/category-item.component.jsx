@@ -86,7 +86,7 @@ class CategoryItem extends Component {
               {({ addCartItem }) => (
                 <>
                   {this.state.redirectToProductPage && (
-                    <Navigate to={`${id}`} />
+                    <Navigate to={`/${category}/${id}`} />
                   )}
 
                   <ProductContainer
@@ -99,6 +99,7 @@ class CategoryItem extends Component {
                       <img src={gallery[0]} alt={name} />
                       {this.state.hoverIcon && (
                         <ProductHoverIcon
+                          attributes={attributes}
                           style={{ zIndex: '5' }}
                           ref={this.cartIconRef} // to add product from PLP , as it was noted on FAQ
                           onClick={this.cartClickHandler.bind(

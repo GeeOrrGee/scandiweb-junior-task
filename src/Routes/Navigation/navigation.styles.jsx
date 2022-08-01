@@ -224,20 +224,19 @@ export const NavListContainer = styled.ul`
 
 export const NavigationContainer = styled.nav`
   display: flex;
-  width: 85vw;
+
   position: sticky;
   top: 0;
 
-  padding-top: 1rem;
-  padding-inline: 2rem;
+  padding-top: 1.2rem;
+  padding-inline: clamp(2rem, 5vw, 7rem);
   background-color: #fff;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-radius: 5px;
   box-shadow: 0 0 1rem rgb(0, 0, 0, 0.02);
 
   justify-content: space-between;
   align-items: flex-start;
-  margin: 2rem auto;
+
   z-index: 5;
   height: 6rem;
   ${({ mobileNavActive }) =>
