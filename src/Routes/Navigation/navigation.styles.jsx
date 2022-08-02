@@ -105,7 +105,7 @@ export const NavCartContainer = styled.div`
   justify-content: flex-end;
 
   position: relative;
-  div:first-child {
+  header {
     cursor: pointer;
     display: flex;
     gap: 1rem;

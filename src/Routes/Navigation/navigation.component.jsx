@@ -37,7 +37,6 @@ class Navigation extends Component {
       mobileNav: false,
       dropdownActive: false,
       mobileNavActive: false,
-      minicartActive: false,
     }
     this.dropdownRef = createRef()
     this.toggleMobileNav = this.toggleMobileNav.bind(this) // handles toggling the mobile navigation UI (slide-in)
@@ -66,8 +65,8 @@ class Navigation extends Component {
     }
   } // conditional mobileNavBar rendering logic
 
-  displayMinicart = () => {
-    this.setState({ ...this.state, minicartActive: !this.state.minicartActive })
+  displayMinicart = (setIsCartOpen, isCartopen) => {
+    return setIsCartOpen(!isCartopen)
   }
 
   componentWillUnmount() {
@@ -82,11 +81,11 @@ class Navigation extends Component {
     }
   }
 
-  backdropHandler = (event) => {
+  backdropHandler = (setIsCartOpen, isCartOpen) => {
     if (this.state.mobileNavActive) {
       return this.setState({ ...this.state, mobileNavActive: false })
-    } else if (this.state.minicartActive) {
-      this.setState({ ...this.state, minicartActive: false })
+    } else if (isCartOpen) {
+      return setIsCartOpen(false)
     }
   }
 
@@ -101,13 +100,16 @@ class Navigation extends Component {
 
           return (
             <CartContext.Consumer>
-              {({ cart, cartQuantity }) => {
+              {({ cart, cartQuantity, isCartOpen, setIsCartOpen }) => {
                 return (
                   <>
-                    {(this.state.mobileNavActive ||
-                      this.state.minicartActive) && (
+                    {(this.state.mobileNavActive || isCartOpen) && (
                       <Backdrop
-                        onClick={this.backdropHandler}
+                        onClick={this.backdropHandler.bind(
+                          null,
+                          setIsCartOpen,
+                          isCartOpen,
+                        )}
                         type={
                           this.state.mobileNavActive
                             ? 'full-screen'
@@ -167,7 +169,7 @@ class Navigation extends Component {
 
                       <NavCartContainer>
                         {/* DROPDOWN CURRENCY  TOGGLER*/}
-                        <div
+                        <header
                           ref={this.dropdownRef}
                           onClick={() => {
                             this.setState({
@@ -181,18 +183,20 @@ class Navigation extends Component {
                           ) : (
                             <VectorUp />
                           )}
-                        </div>
+                        </header>
 
                         <CartIconContainer
-                          onClick={this.displayMinicart}
+                          onClick={this.displayMinicart.bind(
+                            null,
+                            setIsCartOpen,
+                            isCartOpen,
+                          )}
                           display={cartQuantity}
                         >
                           <span>{cartQuantity}</span>
                           <CartIcon></CartIcon>
                         </CartIconContainer>
-                        {this.state.minicartActive && (
-                          <MiniCart cartItems={cart} />
-                        )}
+                        {isCartOpen && <MiniCart cartItems={cart} />}
 
                         {/* HIDDEN CUSTOM DROPDOWN */}
                         {this.state.dropdownActive && (

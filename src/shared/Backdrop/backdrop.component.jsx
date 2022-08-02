@@ -14,7 +14,7 @@ class Backdrop extends Component {
 
   render() {
     const { type, children, ...otherProps } = this.props
-    const getBackdropType = (backdropType) => {
+    const getBackdropType = (backdropType = 'standard') => {
       return {
         [backdropTypes.standard]: BackdropStandard,
         [backdropTypes.fullscreen]: BackdropFullScreen,

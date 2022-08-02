@@ -29,6 +29,12 @@ export const SwatchAttribute = styled.div`
   background-color: ${({ color }) => color};
   cursor: pointer;
 
+  ${({ size }) =>
+    size === 'small' &&
+    `
+  width:clamp(1rem, 1.5vw, 2rem);
+  height:clamp(1rem, 1.5vw, 2rem);`}
+
   &.active-swatch-attribute {
     border: solid 0.1rem #fff;
     outline: solid 0.1rem #5ece7b;
@@ -39,7 +45,7 @@ export const SwatchAttribute = styled.div`
       ? `
     border: 1px solid red;
     color: red;
-  `
+    `
       : ''}
 `
 
@@ -52,6 +58,18 @@ export const TextAttribute = styled.span`
   text-align: center;
   cursor: pointer;
 
+  ${({ size }) =>
+    size === 'medium' &&
+    `
+    padding:0 .6rem ;
+    font-size: clamp(.8rem, 2vw,3rem);
+  `}
+
+  ${({ size }) =>
+    size === 'small' &&
+    `
+  padding:clamp(.2rem, .6vw, 1rem) ;
+  font-size: 0.8rem !important;`}
   transition: all 0.3s;
   &.active-text-attribute {
     background-color: #1d1f22;

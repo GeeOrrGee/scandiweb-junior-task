@@ -21,6 +21,7 @@ export class CartProvider extends Component {
       cartQuantity: 0,
       totalvalue: 0,
       removeCartItem: this.removeCartItem,
+      clearCartItems: this.clearCartItems,
     }
   }
 
@@ -36,13 +37,22 @@ export class CartProvider extends Component {
     )
     if (existingItems.length) {
       ////////////////
-      const filteredCartItems = this.state.cart.map((cartItem) => {
+      const filteredCartItems = this.state.cart.map((cartItem, index1) => {
         if (cartItem.id !== newItem.id) return cartItem
 
         const matchingAttributes = cartItem.attributes.filter(
-          (attributeSet, index2) =>
-            attributeSet.items.id === newItem.attributes[index2].items.id,
+          (attributeSet, index2) => {
+            const trueValueInExistingItem = attributeSet.items.find(
+              (item) => item.selected === true,
+            )
+            const newItemTrueValue = newItem.attributes[index2].items.find(
+              (item) => item.selected === true,
+            )
+
+            return trueValueInExistingItem.id === newItemTrueValue.id
+          },
         )
+        console.log(matchingAttributes)
         if (
           matchingAttributes.length === cartItem.attributes.length &&
           newItem.id === cartItem.id
@@ -55,16 +65,27 @@ export class CartProvider extends Component {
       }) // searching for identical  item to increment in the cart
 
       // creating a secondary check to add a newItem with different attributes but with the same product id/type
-      const sameIdSameAttributesCheck = existingItems.filter((cartItem) => {
-        const matchingAttributes = cartItem.attributes.filter(
-          (attributeSet, index) =>
-            attributeSet.items.id === newItem.attributes[index].items.id,
-        )
+      const sameIdSameAttributesCheck = existingItems.filter(
+        (cartItem, index1) => {
+          const matchingAttributes = cartItem.attributes.filter(
+            (attributeSet, index2) => {
+              const trueValueInExistingItem = attributeSet.items.find(
+                (item) => item.selected === true,
+              )
+              const newItemTrueValue = newItem.attributes[index2].items.find(
+                (item) => item.selected === true,
+              )
 
-        return matchingAttributes.length === newItem.attributes.length
-      })
+              return trueValueInExistingItem.id === newItemTrueValue.id
+            },
+          )
+
+          return matchingAttributes.length === newItem.attributes.length
+        },
+      )
 
       if (!sameIdSameAttributesCheck.length)
+        // if productIds match but not attributeValues, adds the passed newItem
         filteredCartItems.push({ ...newItem, quantity: 1 })
 
       return this.setState({ ...this.state, cart: [...filteredCartItems] })
@@ -100,6 +121,11 @@ export class CartProvider extends Component {
   setIsCartOpen(boolean) {
     this.setState({ ...this.state, isCartOpen: boolean })
   }
+
+  clearCartItems = () => {
+    this.setState({ ...this.state, cart: [] })
+  }
+
   componentDidUpdate(prevProps, prevState) {
     // console.log(prevState, this.state)
 
@@ -115,15 +141,14 @@ export class CartProvider extends Component {
     const { activeCurrency } = this.context
     const totalValue = parseFloat(
       // to omit the JS quirkiness with numbers :)
-      this.state.cart
-        .reduce((acc, curr) => {
-          const [filteredPrice] = curr.prices.filter(
-            (priceObj) => priceObj.currency.label === activeCurrency,
-          )
-          return acc + filteredPrice.amount * curr.quantity
-        }, 0)
-        .toFixed(2),
-    ) //accumulating total value based on the activeCurrency
+      this.state.cart.reduce((acc, curr) => {
+        const [filteredPrice] = curr.prices.filter(
+          (priceObj) => priceObj.currency.label === activeCurrency,
+        )
+        return acc + filteredPrice.amount * curr.quantity
+      }, 0),
+    ).toFixed(2)
+    //accumulating total value based on the activeCurrency
     if (currentTotalQuantity !== previousTotalQuantity) {
       return this.setState({
         ...this.state,

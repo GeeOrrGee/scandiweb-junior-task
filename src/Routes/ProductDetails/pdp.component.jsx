@@ -85,18 +85,20 @@ class ProductDetails extends Component {
     this.setState({ ...this.state, [name]: attribute })
   }
 
+  // TODO:  Done here, this function return an array of attributes with the selected properties applied on each, now adapt CartContext logic to this data flow
   addProductHandler(product, attributes, addCartItem) {
-    const filteredAttributes = attributes.map((attributeSet) => {
-      const [filteredAttrItem] = attributeSet.items.filter(
-        (attribute) => attribute.id === this.state[attributeSet.name]?.id, //filtering product attributes based on selected attributes from state
-      )
+    const modifiedAttributes = attributes.map((attributeSet) => {
+      const addingSelectedValues = attributeSet.items.map((attributeItem) => {
+        const checkValues =
+          attributeItem.id === this.state[attributeSet.name]?.id ? true : false
+        return { ...attributeItem, selected: checkValues }
+      })
+      // if (!filteredAttrItem) return null
 
-      if (!filteredAttrItem) return null
-
-      return { ...attributeSet, items: filteredAttrItem } // filtering nested items for attributeSet objects
+      return { ...attributeSet, items: addingSelectedValues } // filtering nested items for attributeSet objects
     })
 
-    const selectedAttributesValidation = filteredAttributes.filter(
+    const selectedAttributesValidation = modifiedAttributes.filter(
       (attributeSet) => attributeSet === null || undefined,
     ) //checking the unselected attributes in selected array
 
@@ -107,7 +109,7 @@ class ProductDetails extends Component {
       return null
     }
 
-    return addCartItem({ ...product, attributes: filteredAttributes }) // setting cart item with selected attributes
+    return addCartItem({ ...product, attributes: modifiedAttributes }) // setting cart item with selected attributes
   }
 
   render() {
