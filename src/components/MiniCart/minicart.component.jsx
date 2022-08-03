@@ -47,7 +47,6 @@ class MiniCart extends Component {
                 clearCartItems,
                 setIsCartOpen,
               }) => {
-                console.log(currencies)
                 const [{ symbol }] = currencies.filter(
                   (currencyObj) => currencyObj.label === activeCurrency,
                 )
@@ -84,6 +83,7 @@ class MiniCart extends Component {
                         <ProductsContainer>
                           {cart.map((cartItem) => (
                             <CartItem
+                              attributeType="small"
                               product={cartItem}
                               removeCartItem={removeCartItem}
                               addCartItem={addCartItem}
@@ -96,9 +96,15 @@ class MiniCart extends Component {
                           <span>{`${symbol}${totalValue}`}</span>
                         </TotalValueContainer>
                         <CheckoutButtonsContainer>
-                          <CustomButton btnType={'text'}>
-                            <Link to="/checkout">View Bag</Link>
-                          </CustomButton>
+                          <Link to={'/checkout'}>
+                            {' '}
+                            <CustomButton
+                              btnType={'text'}
+                              onClick={() => setIsCartOpen(false)}
+                            >
+                              View Bag
+                            </CustomButton>
+                          </Link>
                           <CustomButton
                             btnType={'submit'}
                             inStock={true}

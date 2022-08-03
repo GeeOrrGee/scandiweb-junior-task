@@ -104,8 +104,16 @@ export class CartProvider extends Component {
         if (cartItem.id !== deleteItem.id) return cartItem
 
         const matchingAttributes = cartItem.attributes.filter(
-          (attributeSet, index) =>
-            attributeSet.items.id === deleteItem.attributes[index].items.id,
+          (attributeSet, index2) => {
+            const trueValueInExistingItem = attributeSet.items.find(
+              (item) => item.selected === true,
+            )
+            const newItemTrueValue = deleteItem.attributes[index2].items.find(
+              (item) => item.selected === true,
+            )
+
+            return trueValueInExistingItem.id === newItemTrueValue.id
+          },
         )
 
         if (matchingAttributes.length === cartItem.attributes.length)
@@ -170,6 +178,7 @@ export class CartProvider extends Component {
   //cartIsOpen
 
   render() {
+    console.log(this.state)
     return (
       <CartContext.Provider value={this.state}>
         {this.props.children}

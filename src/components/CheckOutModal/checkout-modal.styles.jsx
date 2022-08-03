@@ -17,14 +17,19 @@ export const CheckoutModalContainer = styled.div`
   h2 {
     font-weight: 400;
   }
-  button {
+  a {
     width: 50%;
-    a {
-      text-decoration: none;
+    text-decoration: none;
+    color: inherit;
+    &:visited {
       color: inherit;
-      &:visited {
-        color: inherit;
-      }
+    }
+    &:active {
+      color: inherit;
+      text-decoration: none;
+    }
+    display: block;
+    button {
     }
   }
 `

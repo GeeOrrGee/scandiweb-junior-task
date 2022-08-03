@@ -21,13 +21,16 @@ class CheckoutModal extends Component {
     return (
       <CheckoutModalContainer>
         <h2>Your products have been ordered.</h2>
-        <CustomButton
-          btnType="submit"
-          inStock={true}
-          onClick={this.returnHomeHandler.bind(null, checkOutHandler)}
-        >
-          <Link to={'/'}>Return to homepage</Link>
-        </CustomButton>
+        <Link to={'/'}>
+          {' '}
+          <CustomButton
+            btnType="submit"
+            inStock={true}
+            onClick={this.returnHomeHandler.bind(null, checkOutHandler)}
+          >
+            Return to homepage
+          </CustomButton>
+        </Link>
       </CheckoutModalContainer>
     )
   }

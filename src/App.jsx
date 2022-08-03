@@ -7,6 +7,7 @@ import { Routes, Route } from 'react-router-dom'
 
 import Navigation from './Routes/Navigation/navigation.component'
 import CategoryPage from './Routes/CategoryPage/CategoryPage.routes'
+import CheckoutPage from './Routes/CheckoutPage/checkout.component'
 
 const ALL_DATA = gql`
   query mainData {
@@ -79,6 +80,7 @@ class App extends Component {
                       />
                     )
                   })}
+                  <Route path="/checkout" element={<CheckoutPage />} />
                 </Routes>
               </main>
             )

@@ -15,7 +15,7 @@ export const Header = styled.header`
 
 export const AttrContainer = styled.li`
   display: flex;
-  gap: 0.2rem;
+  gap: clamp(0.2rem, 0.6vw, 1.5rem);
   justify-content: center;
   align-items: start;
   flex-direction: column;
@@ -27,7 +27,7 @@ export const AttrContainer = styled.li`
   div {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: clamp(0.5rem, 0.81vw, 2rem);
   }
 `
 
@@ -36,7 +36,7 @@ export const AttributesContainer = styled.ul`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.8rem;
+  gap: clamp(0.6rem, 1vw, 3rem);
 `
 
 export const LeftSide = styled.ul`
@@ -49,15 +49,16 @@ export const LeftSide = styled.ul`
   width: 100%;
   gap: 1rem;
   justify-content: space-between;
+  ${({ onCartPage }) => onCartPage && `max-width: unset;`}
   span {
     font-size: 1.2rem;
   }
 `
 
 export const ImgContainer = styled.div`
-  /* max-width: 100%; */
-  max-width: 15rem;
+  max-width: 25rem;
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: center;
   height: 100%;
@@ -74,21 +75,30 @@ export const ButtonsContainer = styled.div`
   height: 100%;
   justify-content: space-between;
   align-items: center;
+  span {
+    font-size: clamp(1rem, 1.4vw, 1.4rem) !important;
+    padding: clamp(0.3rem, 0.4vw, 0.6rem) clamp(0.6rem, 0.8vw, 1.2rem);
+  }
 `
 
 export const RightSide = styled.div`
-  gap: 0.5rem;
+  gap: clamp(0.5rem, 1vw, 2rem);
   display: flex;
-  align-items: start;
-  height: 100%;
+  align-items: center;
+  justify-content: end;
+  height: 22rem;
+  width: 100%;
 `
 
-export const ProductContainer = styled.div`
+export const ProductContainer = styled.li`
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: start;
-  max-height: 20rem;
   height: 100%;
-  gap: clamp(1rem, 4vw, 5rem);
+  max-height: 22rem;
+  height: 100%;
+  ${({ onCartPage }) => onCartPage && 'max-height:75rem;'}
+  position: relative;
+  gap: clamp(2rem, 4vw, 5rem);
 `

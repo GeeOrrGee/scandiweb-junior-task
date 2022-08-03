@@ -206,7 +206,10 @@ class Navigation extends Component {
                               <span
                                 key={currencyObj.symbol}
                                 onClick={() => {
-                                  setActiveCurrency(currencyObj.label)
+                                  setActiveCurrency(
+                                    currencyObj.label,
+                                    currencyObj.symbol,
+                                  )
                                   this.setState({
                                     dropdownActive: !this.state.dropdownActive,
                                   })

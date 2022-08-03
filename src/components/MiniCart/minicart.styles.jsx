@@ -6,14 +6,21 @@ export const CheckoutButtonsContainer = styled.div`
   gap: clamp(0.5rem, 1.5vw, 4rem);
   justify-content: center;
   align-items: center;
-  span {
-    padding: 0.8rem 0;
-
+  a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
     width: 100%;
-    a {
-      text-decoration: none;
-      color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      padding: 0.9rem 1.8rem;
+      width: 100%;
     }
+  }
+  button {
+    font-size: clamp(0.6rem, 1vw, 1.6rem);
   }
 `
 

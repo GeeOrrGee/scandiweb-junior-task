@@ -22,6 +22,7 @@ export const DropdownContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
+  z-index: 10;
   /* gap: 3rem; */
   align-items: center;
   /* padding: 2rem 1.5rem; */
@@ -142,7 +143,6 @@ export const NavListContainer = styled.ul`
   gap: 3rem;
 
   font-size: 1.4rem;
-
   height: 100%;
   li {
     height: 100%;
@@ -176,41 +176,42 @@ export const NavListContainer = styled.ul`
   ${(props) =>
     props.mobileNav &&
     `
-        position:fixed;
-        top:0;
-        left:0;
-        flex-direction: column;
-        width:100vw;
-        height:100vh;
-        max-width: 25rem;
-        align-items:center;
-        padding: 10rem;
-        background-color: #fff !important;
-        z-index:8;
-        transform: translateX(-100%);
-        
-        li{
-            height: unset;
-            width:100%;
-            justify-content: center;  
-            
-        }
-        
-        
-        `}
+    position:fixed;
+    top:0;
+    left:0;
+    flex-direction: column;
+    width:100vw;
+    height:100vh;
+    max-width: 25rem;
+    align-items:center;
+    z-index: 10;
+    padding: 10rem;
+    background-color: #fff !important;
+    z-index:8;
+    transform: translateX(-100%);
+    
+    li{
+      height: unset;
+      width:100%;
+      justify-content: center;  
+      
+    }
+    
+    
+    `}
   ${(props) =>
     props.mobileNavActive &&
     `   transition: all 0.3s;
-        animation: .3s ease forwards slideIn;
-        li{
-            opacity:0;
-            animation: .3s ease forwards slideIn;
-            animation-delay: 0.3s;
-        }
+    animation: .3s ease forwards slideIn;
+    li{
+      opacity:0;
+      animation: .3s ease forwards slideIn;
+      animation-delay: 0.3s;
+    }
     `} //active mobile nav stylings
 
 
-    @keyframes slideIn {
+@keyframes slideIn {
     from {
       transform: translateX(-100%);
       opacity: 0;
@@ -227,20 +228,20 @@ export const NavigationContainer = styled.nav`
 
   position: sticky;
   top: 0;
-
+  z-index: unset;
   padding-top: 1.2rem;
   padding-inline: clamp(2rem, 5vw, 7rem);
   background-color: #fff;
+  z-index: 9999;
   border-radius: 5px;
   box-shadow: 0 0 1rem rgb(0, 0, 0, 0.02);
 
   justify-content: space-between;
   align-items: flex-start;
 
-  z-index: 5;
   height: 6rem;
-  ${({ mobileNavActive }) =>
-    mobileNavActive && '  background-color: rgb(0, 0, 0, 0);'}
+  /* ${({ mobileNavActive }) =>
+    mobileNavActive && '  background-color: rgb(0, 0, 0, 0);'} */
   @media (max-width: 47.5em) {
     align-items: center;
   }

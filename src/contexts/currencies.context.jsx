@@ -1,10 +1,7 @@
 import { Component } from 'react'
 import { createContext } from 'react'
-import { Query } from '@apollo/client/react/components'
-
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
-
 export const CurrencyContext = createContext({})
 
 class CurrencyProvider extends Component {
@@ -20,11 +17,12 @@ class CurrencyProvider extends Component {
     }
   }
 
-  setActiveCurrency(selectedCurrency) {
+  setActiveCurrency(selectedCurrency, selectedSymbol) {
     this.setState(() => {
       return {
         ...this.state,
         activeCurrency: selectedCurrency,
+        activeCurrencySymbol: selectedSymbol,
       }
     })
   }

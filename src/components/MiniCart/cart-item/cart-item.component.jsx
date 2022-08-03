@@ -13,6 +13,7 @@ import {
   RightSide,
 } from './cart-item.styles'
 import { CustomButton } from '../../../shared/customButton/customButton.component'
+import { ThinGreyLine } from '../../../shared/thinLine/thin-line.styles'
 class CartItem extends Component {
   constructor(props) {
     super(props)
@@ -35,66 +36,75 @@ class CartItem extends Component {
     const [{ amount, currency }] = prices.filter(
       (priceObj) => priceObj.currency.label === this.props.activeCurrency,
     )
-    const amountPerItem = amount * quantity
-    console.log(attributes)
+
     return (
-      <ProductContainer key={`${id}/${quantity}`}>
-        <LeftSide>
-          <Header>
-            <span>{brand}</span>
-            <span>{name}</span>
-          </Header>
-          <span>
-            {currency.symbol}
-            {amountPerItem}
-          </span>
-          <AttributesContainer>
-            {attributes.map((attributeSet) => (
-              <AttrContainer>
-                <span>{attributeSet.name}</span>
-                <div>
-                  {attributeSet.items.map((item) => (
-                    <CustomButton
-                      size={'small'}
-                      color={attributeSet.type === 'swatch' ? item.value : null}
-                      className={
-                        item.selected
-                          ? `active-${attributeSet.type}-attribute`
-                          : ''
-                      }
-                      btnType={attributeSet.type}
-                    >
-                      {attributeSet.type === 'text' ? item.value : ''}
-                    </CustomButton>
-                  ))}
-                </div>
-              </AttrContainer>
-            ))}
-          </AttributesContainer>
-        </LeftSide>
-        <RightSide>
-          <ButtonsContainer>
-            <CustomButton
-              btnType="text"
-              size="medium"
-              onClick={addCartItem.bind(null, this.props.product)}
-            >
-              +
-            </CustomButton>
-            <span>{quantity}</span>
-            <CustomButton
-              btnType="text"
-              size="medium"
-              onClick={removeCartItem.bind(null, this.props.product)}
-            >
-              -
-            </CustomButton>
-          </ButtonsContainer>
-          <ImgContainer>
-            <img src={gallery[0]} alt={`$${brand}${name}`} />
-          </ImgContainer>
-        </RightSide>
-      </ProductContainer>
+      <>
+        <ProductContainer
+          onCartPage={this.props.onCartPage}
+          key={`${id}/${quantity}`}
+        >
+          <LeftSide onCartPage={this.props.onCartPage}>
+            <Header>
+              <span>{brand}</span>
+              <span>{name}</span>
+            </Header>
+            <span>
+              {currency.symbol}
+              {amount}
+            </span>
+            <AttributesContainer>
+              {attributes.map((attributeSet) => (
+                <AttrContainer>
+                  <span>{attributeSet.name}</span>
+                  <div>
+                    {attributeSet.items.map((item) => (
+                      <CustomButton
+                        size={this.props.attributeType}
+                        color={
+                          attributeSet.type === 'swatch' ? item.value : null
+                        }
+                        className={
+                          item.selected
+                            ? `active-${attributeSet.type}-attribute`
+                            : ''
+                        }
+                        btnType={attributeSet.type}
+                      >
+                        {attributeSet.type === 'text' ? item.value : ''}
+                      </CustomButton>
+                    ))}
+                  </div>
+                </AttrContainer>
+              ))}
+            </AttributesContainer>
+          </LeftSide>
+          <RightSide>
+            <ButtonsContainer>
+              <CustomButton
+                btnType="text"
+                size={this.props.attributeType}
+                onClick={addCartItem.bind(null, this.props.product)}
+              >
+                +
+              </CustomButton>
+              <span>{quantity}</span>
+              <CustomButton
+                size={this.props.attributeType}
+                btnType="text"
+                onClick={removeCartItem.bind(null, this.props.product)}
+              >
+                -
+              </CustomButton>
+            </ButtonsContainer>
+            <ImgContainer>
+              <img src={gallery[0]} alt={`$${brand}${name}`} />
+            </ImgContainer>
+          </RightSide>
+          {this.props?.currIndex !== this.props?.cartLength && (
+            <ThinGreyLine top={'120'} />
+          )}
+        </ProductContainer>
+      </>
     )
   }
 }

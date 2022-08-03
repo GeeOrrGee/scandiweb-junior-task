@@ -85,23 +85,30 @@ class ProductDetails extends Component {
     this.setState({ ...this.state, [name]: attribute })
   }
 
-  // TODO:  Done here, this function return an array of attributes with the selected properties applied on each, now adapt CartContext logic to this data flow
   addProductHandler(product, attributes, addCartItem) {
+    // filtering default attributes based on the selected attributes in state
     const modifiedAttributes = attributes.map((attributeSet) => {
       const addingSelectedValues = attributeSet.items.map((attributeItem) => {
         const checkValues =
           attributeItem.id === this.state[attributeSet.name]?.id ? true : false
         return { ...attributeItem, selected: checkValues }
       })
-      // if (!filteredAttrItem) return null
+
+      const validation = addingSelectedValues.filter(
+        (item) => item.selected === true,
+      )
+      if (!validation.length) return null // if no items are selected per attribute, return null
 
       return { ...attributeSet, items: addingSelectedValues } // filtering nested items for attributeSet objects
     })
+
+    // console.log(modifiedAttributes)
 
     const selectedAttributesValidation = modifiedAttributes.filter(
       (attributeSet) => attributeSet === null || undefined,
     ) //checking the unselected attributes in selected array
 
+    console.log(selectedAttributesValidation)
     if (product.attributes.length && selectedAttributesValidation.length) {
       // to prevent adding item to cart ONLY from PDP without selected attributes
 
@@ -109,7 +116,7 @@ class ProductDetails extends Component {
       return null
     }
 
-    return addCartItem({ ...product, attributes: modifiedAttributes }) // setting cart item with selected attributes
+    return addCartItem({ ...product, attributes: modifiedAttributes })
   }
 
   render() {
@@ -228,7 +235,7 @@ class ProductDetails extends Component {
                                 null,
                                 product,
                                 attributes,
-                                addCartItem, // adding product to the cart
+                                addCartItem,
                               )}
                             >
                               Add to cart
