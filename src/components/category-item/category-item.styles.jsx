@@ -77,8 +77,6 @@ export const ProductContainer = styled.li`
     box-shadow: 0 0 2rem rgb(0, 0, 0, 0.05);
     transform: scale(102%);
     cursor: pointer;
-    /* padding-top: 1rem; */
-
     border-radius: 10px;
   }
 `

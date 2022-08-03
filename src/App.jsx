@@ -1,6 +1,4 @@
 import { Component } from 'react'
-import './App.css'
-// import { CategoriesContext } from './contexts/categories.context';
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 import { Routes, Route } from 'react-router-dom'
@@ -8,6 +6,7 @@ import { Routes, Route } from 'react-router-dom'
 import Navigation from './Routes/Navigation/navigation.component'
 import CategoryPage from './Routes/CategoryPage/CategoryPage.routes'
 import CheckoutPage from './Routes/CheckoutPage/checkout.component'
+import { Spinner } from './shared/spinner/spinner.styles'
 
 const ALL_DATA = gql`
   query mainData {
@@ -44,7 +43,6 @@ const ALL_DATA = gql`
 `
 
 class App extends Component {
-  // static contextType = CategoriesContext;
   constructor(props) {
     super(props)
 
@@ -56,7 +54,7 @@ class App extends Component {
       <Query query={ALL_DATA}>
         {({ data, loading }) => {
           if (loading) {
-            return console.log('its loading bro')
+            return <Spinner />
           } else {
             const { categories } = data
 
@@ -91,5 +89,4 @@ class App extends Component {
   }
 }
 
-// App.contextType = CategoriesContext;
 export default App

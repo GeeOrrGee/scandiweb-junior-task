@@ -27,12 +27,21 @@ class CurrencyProvider extends Component {
     })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
+    const prevState = JSON.parse(localStorage.getItem('currencyContext'))
+    if (prevState === null || undefined) return
+    this.setState({ ...prevState })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState !== this.state) {
+      localStorage.setItem('currencyContext', JSON.stringify(this.state))
+    }
     const {
       data: { loading },
     } = this.props
     if (loading) {
-      console.log('lllaoding')
+      return
     } else if (this.props.data !== prevProps.data) {
       const { currencies } = this.props.data
       this.setState(() => {

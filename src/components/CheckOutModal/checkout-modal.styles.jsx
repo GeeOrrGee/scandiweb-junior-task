@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const CheckoutModalContainer = styled.div`
   position: fixed;
-  width: 50vw;
+  width: 60vw;
   height: clamp(20rem, 50vh, 60rem);
   top: 50%;
   left: 50%;
@@ -16,6 +16,7 @@ export const CheckoutModalContainer = styled.div`
   gap: 10rem;
   h2 {
     font-weight: 400;
+    font-size: clamp(1rem, 1.3vw, 2.2rem) !important;
   }
   a {
     width: 50%;
@@ -30,6 +31,7 @@ export const CheckoutModalContainer = styled.div`
     }
     display: block;
     button {
+      font-size: clamp(1rem, 1.2vw, 2rem);
     }
   }
 `

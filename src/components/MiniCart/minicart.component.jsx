@@ -19,8 +19,6 @@ class MiniCart extends Component {
     this.state = {
       checkOutModal: false,
     }
-
-    // this.checkOutHandler = this.checkOutHandler.bind(this)
   }
 
   checkOutHandler = (clearCartItems, cart) => {
@@ -29,8 +27,18 @@ class MiniCart extends Component {
     return clearCartItems()
   }
 
+  componentDidMount() {
+    const prevState = JSON.parse(localStorage.getItem('minicartState'))
+    if (prevState === null || undefined) return
+    this.setState({ ...prevState })
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState !== this.state)
+      localStorage.setItem('minicartState', JSON.stringify(this.state))
+  }
+
   componentWillUnmount() {
-    this.setState({ ...this.state, checkOutModal: false })
+    localStorage.removeItem('minicartState')
   }
   render() {
     return (
@@ -81,13 +89,14 @@ class MiniCart extends Component {
                           {cartQuantity} items.
                         </h2>
                         <ProductsContainer>
-                          {cart.map((cartItem) => (
+                          {cart.map((cartItem, index) => (
                             <CartItem
+                              key={`${cartItem.id}/${index}`}
                               attributeType="small"
                               product={cartItem}
                               removeCartItem={removeCartItem}
                               addCartItem={addCartItem}
-                              activeCurrency={activeCurrency}
+                              activeCurrency={activeCurrency} //forgive this prop drilling :)
                             />
                           ))}
                         </ProductsContainer>

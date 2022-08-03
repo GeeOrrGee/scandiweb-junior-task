@@ -38,13 +38,9 @@ class CategoryItem extends Component {
   }
 
   redirectProduct(event) {
-    if (event.target.tagName === 'circle') return // was using created ref to prevent the redirecting, but redirect path[0] was throwing error because event.path was undefined, so this condition is sufficient for this particular functionality
+    if (event.target.tagName === 'circle') return
 
     this.setState({ ...this.state, redirectToProductPage: true })
-    // if (!this.state.redirectToProductPage) {
-    // } else {
-    //   this.setState({ ...this.state, redirectToProductPage: false })
-    // }
   }
 
   hoverOverHandler() {
@@ -68,12 +64,6 @@ class CategoryItem extends Component {
     const { prices, inStock, gallery, name, brand, category, attributes, id } =
       this.props.product
 
-    // if (this.props.product.name === 'iMac 2021') console.log(this.props.product)
-    // console.log(this.props.product)
-    const [defaultAttributes] = attributes.filter((attributeObj) => {
-      return attributeObj === (undefined || null)
-    }) // setting default attributes for product for add cart functionality from PLP
-
     return (
       <CurrencyContext.Consumer>
         {({ activeCurrency }) => {
@@ -91,9 +81,9 @@ class CategoryItem extends Component {
 
                   <ProductContainer
                     onMouseEnter={this.hoverOverHandler}
-                    onMouseLeave={this.hoverOverHandler} // on hover effect
+                    onMouseLeave={this.hoverOverHandler}
                     inStock={inStock}
-                    onClick={this.redirectProduct} // redirect to products page
+                    onClick={this.redirectProduct}
                   >
                     <ProductImgContainer>
                       <img src={gallery[0]} alt={name} />

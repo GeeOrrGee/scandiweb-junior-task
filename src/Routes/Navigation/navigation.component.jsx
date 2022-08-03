@@ -2,7 +2,7 @@ import { Component, createRef } from 'react'
 import { ReactComponent as Logo } from '../../assets/navigation-logo/a-logo.svg'
 import { ReactComponent as HamburgerNav } from '../../assets/mobileNavIcons/menu-hamburger-custom.svg'
 import { ReactComponent as CloseBtn } from '../../assets/mobileNavIcons/211652_close_icon.svg'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { ReactComponent as VectorDown } from '../../assets/vectors/Vector-Down.svg'
 import { ReactComponent as VectorUp } from '../../assets/vectors/Vector-Up.svg'
 import { ReactComponent as CartIcon } from '../../assets/navigation-logo/Vector.svg'
@@ -44,12 +44,6 @@ class Navigation extends Component {
     this.handleDropdownClose = this.handleDropdownClose.bind(this) //handles dropdown closing when clicking outside of the switcher
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.displayMobileNav) //handling the display process of the navbar on screen resize: ;
-    this.displayMobileNav() //displaying navbar based on users viewport width on mount
-    window.addEventListener('click', this.handleDropdownClose)
-  }
-
   handleDropdownClose(e) {
     if (this.dropdownRef.current !== e.path[0])
       this.setState({ ...this.state, dropdownActive: false }) // to handle dropdown close outside the dropdownContainer
@@ -69,10 +63,6 @@ class Navigation extends Component {
     return setIsCartOpen(!isCartopen)
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.addingListeners)
-  } //cleaning up listeners
-
   toggleMobileNav() {
     if (this.state.mobileNavActive) {
       return this.setState({ ...this.state, mobileNavActive: false })
@@ -89,6 +79,14 @@ class Navigation extends Component {
     }
   }
 
+  componentDidMount() {
+    window.addEventListener('resize', this.displayMobileNav) //handling the display process of the navbar on screen resize: ;
+    this.displayMobileNav() //displaying navbar based on users viewport width on mount
+    window.addEventListener('click', this.handleDropdownClose)
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.addingListeners)
+  } //cleaning up listeners
   render() {
     return (
       <CurrencyContext.Consumer>

@@ -6,7 +6,6 @@ export const ProductsListContainer = styled.ul`
   width: 100%;
   gap: 6rem;
   z-index: 0;
-  /* grid-template-rows: 30rem; */
 
   @media (max-width: 47.5em) {
     grid-template-columns: repeat(2, 1fr);

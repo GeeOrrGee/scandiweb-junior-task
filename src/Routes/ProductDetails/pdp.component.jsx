@@ -20,6 +20,7 @@ import { CartContext } from '../../contexts/Cart.context'
 import { CurrencyContext } from '../../contexts/currencies.context'
 import DOMPurify from 'dompurify'
 import { CustomButton } from '../../shared/customButton/customButton.component'
+import { Spinner } from '../../shared/spinner/spinner.styles'
 let sanitizer = DOMPurify.sanitize
 const SELECTED_PRODUCT = gql`
   query ($id: String!) {
@@ -57,10 +58,9 @@ class ProductDetails extends Component {
   constructor(props) {
     super(props)
 
-    // console.log(this.props);
     this.state = {
       unselected: false,
-      activeImg: 0, // referencing imgs by array index numbers
+      activeImg: 0,
     }
 
     this.selectImgHandler = this.selectImgHandler.bind(this) // displays image based on the user click
@@ -86,7 +86,6 @@ class ProductDetails extends Component {
   }
 
   addProductHandler(product, attributes, addCartItem) {
-    // filtering default attributes based on the selected attributes in state
     const modifiedAttributes = attributes.map((attributeSet) => {
       const addingSelectedValues = attributeSet.items.map((attributeItem) => {
         const checkValues =
@@ -97,9 +96,9 @@ class ProductDetails extends Component {
       const validation = addingSelectedValues.filter(
         (item) => item.selected === true,
       )
-      if (!validation.length) return null // if no items are selected per attribute, return null
+      if (!validation.length) return null // if no items are selected per attribute, returns null
 
-      return { ...attributeSet, items: addingSelectedValues } // filtering nested items for attributeSet objects
+      return { ...attributeSet, items: addingSelectedValues }
     })
 
     // console.log(modifiedAttributes)
@@ -108,7 +107,6 @@ class ProductDetails extends Component {
       (attributeSet) => attributeSet === null || undefined,
     ) //checking the unselected attributes in selected array
 
-    console.log(selectedAttributesValidation)
     if (product.attributes.length && selectedAttributesValidation.length) {
       // to prevent adding item to cart ONLY from PDP without selected attributes
 
@@ -119,6 +117,21 @@ class ProductDetails extends Component {
     return addCartItem({ ...product, attributes: modifiedAttributes })
   }
 
+  componentDidMount() {
+    const prevState = JSON.parse(localStorage.getItem('PDPpreviousState'))
+    if (prevState === null || undefined) return
+    this.setState({ ...prevState })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState !== this.state) {
+      localStorage.setItem('PDPpreviousState', JSON.stringify(this.state))
+    }
+  }
+
+  componentWillUnmount() {
+    localStorage.removeItem('PDPpreviousState')
+  }
   render() {
     const productId = this.props.params.productId
 
@@ -126,7 +139,7 @@ class ProductDetails extends Component {
       <Query variables={{ id: productId }} query={SELECTED_PRODUCT}>
         {({ data, loading }) => {
           if (loading) {
-            return <h2>spinner</h2>
+            return <Spinner />
           } else {
             const { product } = data
             const {
@@ -138,6 +151,7 @@ class ProductDetails extends Component {
               attributes,
               name,
             } = product
+
             return (
               <CurrencyContext.Consumer>
                 {({ activeCurrency }) => {

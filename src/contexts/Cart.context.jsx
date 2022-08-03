@@ -7,6 +7,7 @@ export const CartContext = createContext({
   cartQuantity: 0,
   setIsCartOpen: () => {},
   isCartOpen: false,
+  totalValue: 0,
   removeCartItem: () => {},
 })
 
@@ -19,14 +20,10 @@ export class CartProvider extends Component {
       isCartOpen: false,
       setIsCartOpen: this.setIsCartOpen.bind(this),
       cartQuantity: 0,
-      totalvalue: 0,
+      totalValue: 0,
       removeCartItem: this.removeCartItem,
       clearCartItems: this.clearCartItems,
     }
-  }
-
-  componentDidMount() {
-    // this.setState({ ...this.state, cartQuantity: this.state.cart.length }) QUANTITY SHEICHALICHE
   }
 
   addCartItem(newItem) {
@@ -52,12 +49,11 @@ export class CartProvider extends Component {
             return trueValueInExistingItem.id === newItemTrueValue.id
           },
         )
-        console.log(matchingAttributes)
+
         if (
           matchingAttributes.length === cartItem.attributes.length &&
           newItem.id === cartItem.id
         ) {
-          console.log('matched')
           return { ...cartItem, quantity: cartItem.quantity + 1 }
         } else {
           return cartItem
@@ -134,9 +130,14 @@ export class CartProvider extends Component {
     this.setState({ ...this.state, cart: [] })
   }
 
+  componentDidMount() {
+    const prevState = JSON.parse(localStorage.getItem('prevState'))
+    if (prevState === null || undefined) return
+    this.setState({ ...prevState })
+  }
   componentDidUpdate(prevProps, prevState) {
     // console.log(prevState, this.state)
-
+    localStorage.setItem('prevState', JSON.stringify(this.state))
     const previousTotalQuantity = prevState.cart.reduce(
       (acc, curr) => acc + curr.quantity,
       0,
@@ -178,7 +179,7 @@ export class CartProvider extends Component {
   //cartIsOpen
 
   render() {
-    console.log(this.state)
+    // console.log(this.state)
     return (
       <CartContext.Provider value={this.state}>
         {this.props.children}

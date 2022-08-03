@@ -24,12 +24,28 @@ class CheckoutPage extends Component {
   }
 
   handleOrderSubmit = (clearCartItems, cart = []) => {
+    console.log(cart)
     this.setState({ ...this.state, orderSubmit: !this.orderSubmit })
     if (!cart.length) return
     clearCartItems()
     return
   }
 
+  getScrollPosition = () => {
+    const scrollPos = window.scrollY
+    localStorage.setItem('CheckoutScrollPos', JSON.stringify(scrollPos))
+  }
+  componentDidMount() {
+    const scrollPosition = JSON.parse(localStorage.getItem('CheckoutScrollPos'))
+    if (scrollPosition) window.scrollTo(0, scrollPosition)
+    window.addEventListener('scroll', this.getScrollPosition)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.getScrollPosition)
+  }
+
+  // TODO: add picture switcher on the cart page, add local storage and review the code/comments, dats it
   render() {
     return (
       <CurrencyContext.Consumer>
@@ -52,22 +68,21 @@ class CheckoutPage extends Component {
                       <CheckoutContainer>
                         <h2>Cart</h2>
                         <CartContainer>
-                          <ThinGreyLine top={'-17'} />
+                          <ThinGreyLine top={'-3'} />
                           {cart.map((cartItem, index) => {
                             return (
-                              <>
-                                {' '}
-                                <CartItem
-                                  onCartPage={true}
-                                  attributeType=""
-                                  product={cartItem}
-                                  removeCartItem={removeCartItem}
-                                  addCartItem={addCartItem}
-                                  activeCurrency={activeCurrency}
-                                  currIndex={index}
-                                  cartLength={cart.length}
-                                />
-                              </>
+                              // reusing minicart's cartItem with little bit of configurations
+                              <CartItem
+                                key={`${cartItem}/${index}`}
+                                onCartPage={true}
+                                attributeType=""
+                                product={cartItem}
+                                removeCartItem={removeCartItem}
+                                addCartItem={addCartItem}
+                                activeCurrency={activeCurrency}
+                                currIndex={index}
+                                cartLength={cart.length} // forgive this verbose prop drilling :)
+                              />
                             )
                           })}
                         </CartContainer>

@@ -50,7 +50,7 @@ export const SwatchAttribute = styled.div`
 `
 
 export const TextAttribute = styled.span`
-  padding: clamp(0.2rem, 1vw, 1.5rem);
+  padding: clamp(0.1rem, 0.8vw, 1.5rem);
   border: 1px solid #1d1f22;
   background-color: transparent;
   font-size: clamp(0.6rem, 1vw, 1.6rem);
@@ -68,7 +68,7 @@ export const TextAttribute = styled.span`
   ${({ size }) =>
     size === 'small' &&
     `
-  padding:clamp(.2rem, .6vw, 1rem) ;
+  padding:clamp(.2rem, .4vw, .8rem) ;
   font-size: 0.8rem !important;`}
     transition: background-color 0.3s;
   &.active-text-attribute {

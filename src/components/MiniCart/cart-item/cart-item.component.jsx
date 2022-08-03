@@ -1,8 +1,8 @@
 import { Component } from 'react'
-import { Backdrop } from '../../../shared/Backdrop/backdrop.component'
-import { CartContext } from '../../../contexts/Cart.context'
-import { CurrencyContext } from '../../../contexts/currencies.context'
+import { ReactComponent as VectorLeft } from '../../../assets/vectors/Vector-Left.svg'
+import { ReactComponent as VectorRight } from '../../../assets/vectors/Vector-Right.svg'
 import {
+  ArrowButtonsContainer,
   AttrContainer,
   AttributesContainer,
   ButtonsContainer,
@@ -17,21 +17,33 @@ import { ThinGreyLine } from '../../../shared/thinLine/thin-line.styles'
 class CartItem extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      currentImgIndex: 0,
+    }
+  }
+
+  imgSwitchHandler = (type, gallery) => {
+    const lastIndex = gallery.length - 1
+    if (type === 'left') {
+      return this.setState({
+        currentImgIndex:
+          this.state.currentImgIndex === 0
+            ? lastIndex
+            : this.state.currentImgIndex - 1,
+      })
+    } else if (type === 'right') {
+      return this.setState({
+        currentImgIndex:
+          this.state.currentImgIndex === lastIndex
+            ? 0
+            : this.state.currentImgIndex + 1,
+      })
+    }
   }
 
   render() {
-    const {
-      inStock,
-      gallery,
-      description,
-      prices,
-      brand,
-      attributes,
-      name,
-      id,
-      quantity,
-    } = this.props.product
+    const { gallery, prices, brand, attributes, name, quantity } =
+      this.props.product
     const { addCartItem, removeCartItem } = this.props
     const [{ amount, currency }] = prices.filter(
       (priceObj) => priceObj.currency.label === this.props.activeCurrency,
@@ -39,11 +51,8 @@ class CartItem extends Component {
 
     return (
       <>
-        <ProductContainer
-          onCartPage={this.props.onCartPage}
-          key={`${id}/${quantity}`}
-        >
-          <LeftSide onCartPage={this.props.onCartPage}>
+        <ProductContainer>
+          <LeftSide>
             <Header>
               <span>{brand}</span>
               <span>{name}</span>
@@ -54,11 +63,12 @@ class CartItem extends Component {
             </span>
             <AttributesContainer>
               {attributes.map((attributeSet) => (
-                <AttrContainer>
+                <AttrContainer key={attributeSet.id}>
                   <span>{attributeSet.name}</span>
                   <div>
                     {attributeSet.items.map((item) => (
                       <CustomButton
+                        key={item.id}
                         size={this.props.attributeType}
                         color={
                           attributeSet.type === 'swatch' ? item.value : null
@@ -97,11 +107,45 @@ class CartItem extends Component {
               </CustomButton>
             </ButtonsContainer>
             <ImgContainer>
-              <img src={gallery[0]} alt={`$${brand}${name}`} />
+              {this.props.onCartPage ? (
+                <>
+                  <img
+                    src={`${gallery[this.state.currentImgIndex]}`}
+                    alt={`$${brand}${name}`}
+                  />
+                  {gallery.length > 1 && (
+                    <ArrowButtonsContainer>
+                      <div
+                        onClick={this.imgSwitchHandler.bind(
+                          null,
+                          'left',
+                          gallery,
+                        )}
+                      >
+                        <VectorLeft />
+                      </div>
+                      <div
+                        onClick={this.imgSwitchHandler.bind(
+                          null,
+                          'right',
+                          gallery,
+                        )}
+                      >
+                        <VectorRight />
+                      </div>
+                    </ArrowButtonsContainer>
+                  )}
+                </>
+              ) : (
+                <img
+                  src={gallery[this.state.currentImgIndex]}
+                  alt={`$${brand}${name}`}
+                />
+              )}
             </ImgContainer>
           </RightSide>
           {this.props?.currIndex !== this.props?.cartLength && (
-            <ThinGreyLine top={'120'} />
+            <ThinGreyLine top={'130'} />
           )}
         </ProductContainer>
       </>

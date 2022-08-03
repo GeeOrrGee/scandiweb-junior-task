@@ -27,7 +27,7 @@ export const AttrContainer = styled.li`
   div {
     display: flex;
     align-items: center;
-    gap: clamp(0.5rem, 0.81vw, 2rem);
+    gap: clamp(0.4rem, 0.6vw, 2rem);
   }
 `
 
@@ -55,6 +55,33 @@ export const LeftSide = styled.ul`
   }
 `
 
+export const ArrowButtonsContainer = styled.div`
+  position: absolute;
+  display: flex;
+  width: 20%;
+  justify-content: space-around;
+  bottom: 4%;
+  right: 22%;
+  div {
+    max-width: 2rem;
+    height: 2em;
+    display: flex;
+    background-color: rgb(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    &:hover {
+      opacity: 0.8;
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+`
+
 export const ImgContainer = styled.div`
   max-width: 25rem;
   display: flex;
@@ -62,6 +89,7 @@ export const ImgContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+  position: relative;
   img {
     width: 100%;
     height: 100%;
