@@ -63,7 +63,7 @@ class ProductDetails extends Component {
       activeImg: 0,
     }
 
-    this.selectImgHandler = this.selectImgHandler.bind(this) // displays image based on the user click
+    this.selectImgHandler = this.selectImgHandler.bind(this)
     this.selectAttributeHandler = this.selectAttributeHandler.bind(this) // selects an attribute and dynamically adds the attribute fields name and value in state
     this.addProductHandler = this.addProductHandler.bind(this)
   }
@@ -79,7 +79,6 @@ class ProductDetails extends Component {
 
   selectAttributeHandler(attribute, name) {
     if (attribute.id === this.state[name]?.id) {
-      //  if the method gets called on the selected attribute, it just returns nothing to prevent unnecessary re-renderings
       return null
     }
     this.setState({ ...this.state, [name]: attribute })

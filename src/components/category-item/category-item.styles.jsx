@@ -34,7 +34,6 @@ export const ProductImgContainer = styled.div`
 
   max-height: 27rem;
 
-  /* flex-grow: 1; */
   height: 100%;
   img {
     height: 100%;
@@ -49,8 +48,7 @@ export const ProductContainer = styled.li`
 
   display: flex;
   flex-direction: column;
-  /* max-height: 35rem; */
-  /* gap: 3rem; */
+
   justify-content: space-around;
   width: 100%;
   height: 100%;

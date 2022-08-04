@@ -28,7 +28,6 @@ export class CartProvider extends Component {
 
   addCartItem(newItem) {
     if (!newItem.inStock) return
-    // its a serverside BUG NOT YOUR FAULT
     const existingItems = this.state.cart.filter(
       (cartItem) => newItem.id === cartItem.id,
     )
@@ -136,7 +135,6 @@ export class CartProvider extends Component {
     this.setState({ ...prevState })
   }
   componentDidUpdate(prevProps, prevState) {
-    // console.log(prevState, this.state)
     localStorage.setItem('prevState', JSON.stringify(this.state))
     const previousTotalQuantity = prevState.cart.reduce(
       (acc, curr) => acc + curr.quantity,
@@ -172,14 +170,7 @@ export class CartProvider extends Component {
     }
   }
 
-  //cart count
-  //add item to cart
-  //quantity of the same object
-  //delete item from cart
-  //cartIsOpen
-
   render() {
-    // console.log(this.state)
     return (
       <CartContext.Provider value={this.state}>
         {this.props.children}

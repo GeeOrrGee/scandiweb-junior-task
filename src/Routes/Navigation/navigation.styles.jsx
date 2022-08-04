@@ -89,7 +89,7 @@ export const CartIconContainer = styled.div`
     height: 1.7rem;
     text-align: center;
     display: none;
-    /* opacity: 0; */
+
     transform: translate(-50%, -50%);
     ${(props) => (props.display !== 0 ? `display:block;` : '')};
   }
@@ -117,14 +117,6 @@ export const NavCartContainer = styled.div`
     span {
       pointer-events: none;
     }
-    /* span {
-            width: 100%;
-            height: 100%;
-        }
-        svg {
-            width: 100%;
-            height: 100%;
-        } */
   }
   @media (max-width: 47.5em) {
     width: unset;
@@ -242,8 +234,7 @@ export const NavigationContainer = styled.nav`
   align-items: flex-start;
 
   height: 6rem;
-  /* ${({ mobileNavActive }) =>
-    mobileNavActive && '  background-color: rgb(0, 0, 0, 0);'} */
+
   @media (max-width: 47.5em) {
     align-items: center;
   }

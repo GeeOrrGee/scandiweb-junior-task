@@ -116,6 +116,3 @@ class CategoryItem extends Component {
 }
 
 export default CategoryItem
-
-// details page (params)
-// cart functionality
