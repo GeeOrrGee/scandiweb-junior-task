@@ -23,10 +23,33 @@ class CheckoutPage extends Component {
     }
   }
 
-  handleOrderSubmit = (clearCartItems, cart = []) => {
-    console.log(cart)
+  handleOrderSubmit = (clearCartItems, cart = [], activeCurrency) => {
     this.setState({ ...this.state, orderSubmit: !this.orderSubmit })
     if (!cart.length) return
+    const cartWithFilteredPrice = cart.map((cartItem) => {
+      const filteredPriceItem = cartItem.prices.filter(
+        //just a little optimization
+        (priceObj) => priceObj.currency.label === activeCurrency,
+      )
+
+      const filteredAttributes = cartItem.attributes
+        .filter((attributeSet) =>
+          attributeSet.items.filter((item) => item.selected === true),
+        )
+        .map((filteredAttr) => {
+          const filteredItem = filteredAttr.items.filter(
+            (item) => item.selected === true,
+          )
+          return { ...filteredAttr, items: filteredItem }
+        })
+
+      return {
+        ...cartItem,
+        prices: filteredPriceItem,
+        attributes: filteredAttributes,
+      }
+    })
+    console.log(cartWithFilteredPrice)
     clearCartItems()
     return
   }
@@ -107,6 +130,7 @@ class CheckoutPage extends Component {
                               null,
                               clearCartItems,
                               cart,
+                              activeCurrency,
                             )}
                           >
                             ORDER
@@ -129,9 +153,7 @@ class CheckoutPage extends Component {
                     )}
                     {this.state.orderSubmit && (
                       <>
-                        <CheckoutModal
-                          checkOutHandler={this.handleOrderSubmit}
-                        />
+                        <CheckoutModal />
                         <Backdrop type={'standard'} />
                       </>
                     )}

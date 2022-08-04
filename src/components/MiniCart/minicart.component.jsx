@@ -21,8 +21,29 @@ class MiniCart extends Component {
     }
   }
 
-  checkOutHandler = (clearCartItems, cart) => {
-    console.log(cart) // for you to see the final products
+  checkOutHandler = (clearCartItems, cart, activeCurrency = 'USD') => {
+    const cartWithFilteredPrice = cart.map((cartItem) => {
+      const filteredPriceItem = cartItem.prices.filter(
+        (priceObj) => priceObj.currency.label === activeCurrency,
+      )
+      const filteredAttributes = cartItem.attributes
+        .filter((attributeSet) =>
+          attributeSet.items.filter((item) => item.selected === true),
+        ) //filtering the attributeSets first
+        .map((filteredAttr) => {
+          const filteredItem = filteredAttr.items.filter(
+            (item) => item.selected === true,
+          )
+          return { ...filteredAttr, items: filteredItem }
+        }) //filtering unselected items on selected attributeSet
+
+      return {
+        ...cartItem,
+        prices: filteredPriceItem,
+        attributes: filteredAttributes, // filtering final cart for final POST request
+      }
+    })
+    console.log(cartWithFilteredPrice) // for you to see the final products
     this.setState({ ...this.state, checkOutModal: true })
     return clearCartItems()
   }
@@ -121,6 +142,7 @@ class MiniCart extends Component {
                               null,
                               clearCartItems,
                               cart,
+                              activeCurrency,
                             )}
                           >
                             Check out

@@ -9,15 +9,13 @@ class CheckoutModal extends Component {
     super(props)
   }
 
-  returnHomeHandler = (checkOutHandler) => {
+  returnHomeHandler = () => {
     const { setIsCartOpen } = this.context
 
-    checkOutHandler()
     return setIsCartOpen(false)
   }
 
   render() {
-    const { checkOutHandler } = this.props
     return (
       <CheckoutModalContainer>
         <h2>Your products have been ordered.</h2>
@@ -26,7 +24,7 @@ class CheckoutModal extends Component {
           <CustomButton
             btnType="submit"
             inStock={true}
-            onClick={this.returnHomeHandler.bind(null, checkOutHandler)}
+            onClick={this.returnHomeHandler}
           >
             Return to homepage
           </CustomButton>

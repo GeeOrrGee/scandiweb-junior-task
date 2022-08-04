@@ -157,11 +157,13 @@ export const NavListContainer = styled.ul`
       display: block;
       height: 100%;
       text-align: center;
-      text-transform: capitalize;
       border-bottom: 2px solid transparent;
+      text-transform: capitalize;
+      color: black;
       &:visited {
         color: black;
       }
+
       &:hover {
         color: rgb(94, 206, 123, 0.8);
         border-bottom: 2px solid rgb(94, 206, 123, 0.8);
