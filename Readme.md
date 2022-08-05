@@ -13,4 +13,4 @@ Used Technologies:
 
 Currently learning/working on:
 -Next.js
--Redux
+
