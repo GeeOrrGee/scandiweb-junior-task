@@ -40,7 +40,10 @@ class CategoryItem extends Component {
   redirectProduct(event) {
     if (event.target.tagName === 'circle') return
 
-    this.setState({ ...this.state, redirectToProductPage: true })
+    this.setState({
+      ...this.state,
+      redirectToProductPage: !this.state.redirectToProductPage,
+    })
   }
 
   hoverOverHandler() {

@@ -8,8 +8,9 @@ export const Spinner = styled.div`
   height: 10rem;
   border: 1.5rem solid grey;
   border-top: 1.5rem solid rgb(0, 0, 0, 0.8);
+  border-radius: 50rem;
   transform: translate(-50%, -50%);
-  animation: spin 2s linear infinite;
+  animation: spin 0.8s linear infinite;
 
   @keyframes spin {
     0% {
@@ -22,6 +23,7 @@ export const Spinner = styled.div`
 
     100% {
       transform: rotate(360deg);
+      border-top: 1.5rem solid grey;
     }
   }
 `
