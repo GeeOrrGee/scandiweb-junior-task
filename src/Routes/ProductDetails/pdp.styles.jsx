@@ -51,7 +51,7 @@ export const PriceContainer = styled.div`
 
 export const AttrContainer = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: clamp(0.5rem, 0.8vw, 1.5rem);
   position: relative;
 `
 
@@ -137,6 +137,10 @@ export const ImgsToSelect = styled.div`
   img {
     cursor: pointer;
     width: 100%;
+  }
+
+  @media (max-width: 46em) {
+    max-height: 35rem;
   }
 `
 

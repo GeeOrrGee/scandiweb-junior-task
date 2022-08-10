@@ -7,6 +7,7 @@ export const AddToCartButton = styled.button`
   border: none;
   cursor: pointer;
   color: #fff;
+  font-size: clamp(1.2rem, 1.4vw, 2rem);
   width: 100%;
 
   ${({ inStock }) =>
@@ -50,10 +51,10 @@ export const SwatchAttribute = styled.div`
 `
 
 export const TextAttribute = styled.span`
-  padding: clamp(0.1rem, 0.8vw, 1.5rem);
+  padding: clamp(0.2rem, 0.8vw, 1.5rem);
   border: 1px solid #1d1f22;
   background-color: transparent;
-  font-size: clamp(0.6rem, 1vw, 1.6rem);
+  font-size: clamp(0.8rem, 1vw, 1.6rem);
   color: #1d1f22;
   text-align: center;
   cursor: pointer;

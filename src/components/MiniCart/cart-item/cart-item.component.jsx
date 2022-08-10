@@ -13,7 +13,7 @@ import {
   RightSide,
 } from './cart-item.styles'
 import { CustomButton } from '../../../shared/customButton/customButton.component'
-import { ThinGreyLine } from '../../../shared/thinLine/thin-line.styles'
+
 class CartItem extends Component {
   constructor(props) {
     super(props)
@@ -44,14 +44,14 @@ class CartItem extends Component {
   render() {
     const { gallery, prices, brand, attributes, name, quantity } =
       this.props.product
-    const { addCartItem, removeCartItem } = this.props
+    const { addCartItem, removeCartItem, onCartPage } = this.props
     const [{ amount, currency }] = prices.filter(
       (priceObj) => priceObj.currency.label === this.props.activeCurrency,
     )
 
     return (
       <>
-        <ProductContainer>
+        <ProductContainer onCartPage={onCartPage}>
           <LeftSide>
             <Header>
               <span>{brand}</span>
@@ -88,8 +88,8 @@ class CartItem extends Component {
               ))}
             </AttributesContainer>
           </LeftSide>
-          <RightSide>
-            <ButtonsContainer>
+          <RightSide onCartPage={onCartPage}>
+            <ButtonsContainer onCartPage={onCartPage}>
               <CustomButton
                 btnType="text"
                 size={this.props.attributeType}
@@ -107,7 +107,7 @@ class CartItem extends Component {
               </CustomButton>
             </ButtonsContainer>
             <ImgContainer>
-              {this.props.onCartPage ? (
+              {onCartPage ? (
                 <>
                   <img
                     src={`${gallery[this.state.currentImgIndex]}`}
@@ -144,9 +144,6 @@ class CartItem extends Component {
               )}
             </ImgContainer>
           </RightSide>
-          {this.props?.currIndex !== this.props?.cartLength && (
-            <ThinGreyLine top={'130'} />
-          )}
         </ProductContainer>
       </>
     )

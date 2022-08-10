@@ -36,7 +36,7 @@ export const AttributesContainer = styled.ul`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: clamp(0.6rem, 1vw, 3rem);
+  gap: clamp(0.8rem, 1vw, 3rem);
 `
 
 export const LeftSide = styled.ul`
@@ -58,14 +58,17 @@ export const LeftSide = styled.ul`
 export const ArrowButtonsContainer = styled.div`
   position: absolute;
   display: flex;
-  width: 20%;
-  justify-content: space-around;
+  max-width: 25%;
+  width: 100%;
+
   bottom: 4%;
-  right: 22%;
+  right: 5%;
+  gap: 0.7rem;
   div {
     max-width: 2rem;
     height: 2em;
     display: flex;
+    gap: 1rem;
     background-color: rgb(0, 0, 0, 0.6);
     justify-content: center;
     align-items: center;
@@ -79,6 +82,10 @@ export const ArrowButtonsContainer = styled.div`
       width: 100%;
       height: 100%;
     }
+  }
+
+  @media (max-width: 27.5em) {
+    right: 15%;
   }
 `
 
@@ -103,19 +110,37 @@ export const ButtonsContainer = styled.div`
   height: 100%;
   justify-content: space-between;
   align-items: center;
+
   span {
-    font-size: clamp(1rem, 1.4vw, 1.4rem) !important;
+    font-size: clamp(1.2rem, 1.4vw, 1.4rem) !important;
     padding: clamp(0.3rem, 0.4vw, 0.6rem) clamp(0.6rem, 0.8vw, 1.2rem);
+    order: 2;
+  }
+  span:first-child {
+    order: 3;
+  }
+  span:last-child {
+    order: 1;
+  }
+  @media (max-width: 27.5em) {
+    width: 90%;
+    flex-direction: row;
+    height: 25%;
   }
 `
 
 export const RightSide = styled.div`
-  gap: clamp(0.5rem, 1vw, 2rem);
+  gap: clamp(0.5rem, 1.2vw, 2rem);
   display: flex;
   align-items: center;
   justify-content: end;
   height: 22rem;
-  width: 100%;
+  ${({ onCartPage }) => onCartPage && ``}
+
+  @media (max-width: 27.5em) {
+    flex-direction: column;
+    width: 100%;
+  }
 `
 
 export const ProductContainer = styled.li`
@@ -129,4 +154,13 @@ export const ProductContainer = styled.li`
   ${({ onCartPage }) => onCartPage && 'max-height:75rem;'}
   position: relative;
   gap: clamp(2rem, 4vw, 5rem);
+  ${({ onCartPage }) =>
+    onCartPage &&
+    `
+    @media (max-width:27.5em) {
+    flex-direction: column;
+    justify-content: center;
+    gap: 7rem;
+  }
+  `}
 `
