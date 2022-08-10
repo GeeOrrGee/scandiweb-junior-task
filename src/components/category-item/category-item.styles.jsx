@@ -7,8 +7,6 @@ export const ProductHoverIcon = styled(ProductIcon)`
   bottom: 0;
   right: 0;
   transform: translate(-30%, 50%);
-  ${({ attributes }) =>
-    attributes.length && `opacity: 0.6; pointer-events: none;`}
 `
 
 export const ProductInfoContainer = styled.div`

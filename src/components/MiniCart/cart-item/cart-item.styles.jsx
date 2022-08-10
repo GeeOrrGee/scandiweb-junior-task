@@ -116,16 +116,17 @@ export const ButtonsContainer = styled.div`
     padding: clamp(0.3rem, 0.4vw, 0.6rem) clamp(0.6rem, 0.8vw, 1.2rem);
     order: 2;
   }
-  span:first-child {
-    order: 3;
-  }
-  span:last-child {
-    order: 1;
-  }
+
   @media (max-width: 27.5em) {
     width: 90%;
     flex-direction: row;
     height: 25%;
+    span:first-child {
+      order: 3;
+    }
+    span:last-child {
+      order: 1;
+    }
   }
 `
 
@@ -154,6 +155,7 @@ export const ProductContainer = styled.li`
   ${({ onCartPage }) => onCartPage && 'max-height:75rem;'}
   position: relative;
   gap: clamp(2rem, 4vw, 5rem);
+  margin-left: 0.2rem;
   ${({ onCartPage }) =>
     onCartPage &&
     `

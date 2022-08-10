@@ -38,7 +38,7 @@ class CategoryItem extends Component {
   }
 
   redirectProduct(event) {
-    if (event.target.tagName === 'circle') return
+    if (event.target.tagName === ('circle' || 'path')) return
 
     this.setState({
       ...this.state,
@@ -53,9 +53,10 @@ class CategoryItem extends Component {
     })
   }
 
-  cartClickHandler(product, addCartItem) {
-    if (product.attributes.length) return
-
+  cartClickHandler(product, addCartItem, defaultAttributes) {
+    if (product.attributes.length) {
+      return addCartItem({ ...product, attributes: defaultAttributes })
+    }
     return addCartItem(product)
   }
 
@@ -66,6 +67,16 @@ class CategoryItem extends Component {
   render() {
     const { prices, inStock, gallery, name, brand, category, attributes, id } =
       this.props.product
+
+    const defaultAttributes = attributes.map((attributeSet) => {
+      const modifiedItems = attributeSet.items.map((item, index) =>
+        index === 0 ? { ...item, selected: true } : item,
+      )
+      return {
+        ...attributeSet,
+        items: modifiedItems,
+      }
+    })
 
     return (
       <CurrencyContext.Consumer>
@@ -98,7 +109,9 @@ class CategoryItem extends Component {
                           onClick={this.cartClickHandler.bind(
                             null,
                             this.props.product,
+
                             addCartItem,
+                            defaultAttributes,
                           )} // passing product into the cart context setState
                         />
                       )}
