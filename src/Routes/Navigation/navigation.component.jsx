@@ -17,18 +17,11 @@ import {
   CartIconContainer,
 } from './navigation.styles.jsx'
 import { Query } from '@apollo/client/react/components'
-import { gql } from '@apollo/client'
+
 import { CurrencyContext } from '../../contexts/currencies.context'
 import { CartContext } from '../../contexts/Cart.context'
 import MiniCart from '../../components/MiniCart/minicart.component'
-
-const CATEGORY_NAME = gql`
-  query {
-    categories {
-      name
-    }
-  }
-`
+import { CATEGORY_NAME } from './navigation.queries'
 
 class Navigation extends Component {
   constructor(props) {

@@ -1,7 +1,7 @@
 import { Component, Fragment } from 'react'
 import './pdp.styles'
 import { Query } from '@apollo/client/react/components'
-import { gql } from '@apollo/client'
+
 import { withParams } from '../../utils/HOCs/withParams'
 import {
   AttrContainer,
@@ -21,38 +21,8 @@ import { CurrencyContext } from '../../contexts/currencies.context'
 import DOMPurify from 'dompurify'
 import { CustomButton } from '../../shared/customButton/customButton.component'
 import { Spinner } from '../../shared/spinner/spinner.styles'
+import { SELECTED_PRODUCT } from './pdp.queries'
 let sanitizer = DOMPurify.sanitize
-const SELECTED_PRODUCT = gql`
-  query ($id: String!) {
-    product(id: $id) {
-      id
-      name
-
-      inStock
-      gallery
-      category
-      prices {
-        currency {
-          label
-          symbol
-        }
-        amount
-      }
-      description
-      attributes {
-        id
-        name
-        type
-        items {
-          displayValue
-          value
-          id
-        }
-      }
-      brand
-    }
-  }
-`
 
 class ProductDetails extends Component {
   constructor(props) {

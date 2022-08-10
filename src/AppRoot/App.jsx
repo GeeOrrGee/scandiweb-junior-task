@@ -1,47 +1,13 @@
 import { Component } from 'react'
-import { gql } from '@apollo/client'
+
 import { Query } from '@apollo/client/react/components'
 import { Routes, Route } from 'react-router-dom'
 
-import Navigation from './Routes/Navigation/navigation.component'
-import CategoryPage from './Routes/CategoryPage/CategoryPage.routes'
-import CheckoutPage from './Routes/CheckoutPage/checkout.component'
-import { Spinner } from './shared/spinner/spinner.styles'
-
-const ALL_DATA = gql`
-  query mainData {
-    categories {
-      name
-      products {
-        id
-        name
-        inStock
-        gallery
-        category
-        description
-        brand
-        attributes {
-          id
-          name
-          type
-          items {
-            displayValue
-            value
-            id
-          }
-        }
-        prices {
-          amount
-          currency {
-            label
-            symbol
-          }
-        }
-      }
-    }
-  }
-`
-
+import Navigation from '../Routes/Navigation/navigation.component'
+import CategoryPage from '../Routes/CategoryPage/CategoryPage.routes'
+import CheckoutPage from '../Routes/CheckoutPage/checkout.component'
+import { Spinner } from '../shared/spinner/spinner.styles'
+import { CATEGORIES_NAME } from './App.queries'
 class App extends Component {
   constructor(props) {
     super(props)
@@ -51,7 +17,7 @@ class App extends Component {
 
   render() {
     return (
-      <Query query={ALL_DATA}>
+      <Query query={CATEGORIES_NAME}>
         {({ data, loading }) => {
           if (loading) {
             return <Spinner />
@@ -69,12 +35,7 @@ class App extends Component {
                         path={`${
                           category.name === 'all' ? '/' : category.name
                         }/*`}
-                        element={
-                          <CategoryPage
-                            name={category.name}
-                            products={category.products}
-                          />
-                        }
+                        element={<CategoryPage name={category.name} />}
                       />
                     )
                   })}

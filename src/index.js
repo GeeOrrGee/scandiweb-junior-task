@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import App from './App'
+import App from './AppRoot/App'
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 // import { CategoriesProvider } from './contexts/categories.context';
 import { BrowserRouter } from 'react-router-dom'

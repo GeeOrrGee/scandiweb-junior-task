@@ -9,14 +9,11 @@ class CategoryPage extends Component {
   }
 
   render() {
-    const { name, products } = this.props // I know this is a prop drilling but graphql schema didn't let me grab  only category name in order to make seperate api calls based on THAT category name.
+    const { name } = this.props
 
     return (
       <Routes>
-        <Route
-          index
-          element={<ProductsList products={products} name={name} />}
-        />
+        <Route index element={<ProductsList name={name} />} />
         <Route path={`/:productId`} element={<ProductDetails />} />
       </Routes>
     )
