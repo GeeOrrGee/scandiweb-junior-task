@@ -14,3 +14,11 @@ Used Technologies:
 Currently learning/working on:
 -Next.js
 
+Installation:
+
+make sure you clone and host the GraphQL endpoint , too (it is uploaded on my GitHub account, check repositories).
+
+after cloning repositories:
+
+~ npm install
+~ npm start (make sure GraphQL endpoint is hosted on localhost).
